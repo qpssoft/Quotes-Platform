@@ -12,6 +12,51 @@
         <p class="subtitle">{{ filteredQuotes().length }} câu trích dẫn</p>
       </div>
       
+      <!-- Filter Controls -->
+      <div class="filter-controls">
+        <!-- Display Count Dropdown -->
+        <div class="filter-group">
+          <label for="displayCount" class="filter-label">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="3" y="3" width="14" height="3" rx="1" fill="currentColor"/>
+              <rect x="3" y="8" width="14" height="3" rx="1" fill="currentColor"/>
+              <rect x="3" y="13" width="14" height="3" rx="1" fill="currentColor"/>
+            </svg>
+            Hiển thị
+          </label>
+          <select 
+            id="displayCount"
+            class="filter-select"
+            [ngModel]="displayCount()"
+            (ngModelChange)="onDisplayCountChange($event)"
+            aria-label="Số lượng câu trích dẫn hiển thị">
+            @for (option of displayCountOptions; track option) {
+              <option [value]="option">{{ option }} câu</option>
+            }
+          </select>
+        </div>
+
+        <!-- Font Selection Dropdown -->
+        <div class="filter-group">
+          <label for="fontSelect" class="filter-label">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <text x="2" y="15" font-size="14" font-weight="bold" fill="currentColor">A</text>
+            </svg>
+            Font chữ
+          </label>
+          <select 
+            id="fontSelect"
+            class="filter-select"
+            [ngModel]="selectedFont()"
+            (ngModelChange)="onFontChange($event)"
+            aria-label="Chọn font chữ">
+            @for (font of fontOptions; track font.value) {
+              <option [value]="font.value">{{ font.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      
       <div class="search-bar">
         <div class="search-input-wrapper">
           <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">

@@ -160,9 +160,9 @@
 
 ## Phase 5: User Story 4 - Quote Search and Filtering (Priority: P3)
 
-**Goal**: Full-text search across quotes with real-time grid filtering
+**Goal**: Full-text search across quotes with real-time grid filtering, configurable display count (default: 5), and font selection
 
-**Independent Test**: Type "compassion" in search box, verify grid updates to show only matching quotes
+**Independent Test**: Type "compassion" in search box, verify grid updates to show only matching quotes; change display count to 10, verify 10 quotes show; change font to Georgia, verify font changes
 
 **Estimated Time**: 8-10 hours
 
@@ -179,8 +179,19 @@
 - [X] T069 [US4] Add clear search button (X icon) to reset filter
 - [ ] T070 [US4] Test search performance with 10K quotes (verify <500ms response time)
 - [X] T071 [US4] Handle edge case: search with <12 results (grid adjusts gracefully)
+- [X] T072 [US4] Add display count dropdown with options: 5, 10, 12, 15, 20, 25, 30 (default: 5)
+- [X] T073 [US4] Style display count dropdown in `quote-grid.component.scss` (Buddhist theme, matches timer controls)
+- [X] T074 [US4] Create displayCount signal in QuoteGridComponent (default: 5)
+- [X] T075 [US4] Update filteredQuotes computed to respect displayCount limit
+- [X] T076 [US4] Add font selection dropdown with options: Noto Serif, Georgia, Merriweather, Lora, Playfair Display, Crimson Text
+- [X] T077 [US4] Import Google Fonts in styles.scss for font options
+- [X] T078 [US4] Style font selection dropdown in `quote-grid.component.scss` (Buddhist theme, matches other controls)
+- [X] T079 [US4] Create selectedFont signal in QuoteGridComponent (default: 'Noto Serif')
+- [X] T080 [US4] Implement font change handler to update CSS custom property --quote-font-family
+- [X] T081 [US4] Update quote-card.component.scss to use --quote-font-family CSS variable
+- [X] T082 [US4] Add responsive styles for filter controls on mobile (stack vertically)
 
-**Checkpoint**: User Story 4 complete - search filtering working, all previous user stories functional
+**Checkpoint**: User Story 4 complete - search filtering, display count configuration, and font selection working, all previous user stories functional
 
 ---
 
@@ -192,45 +203,45 @@
 
 ### App Integration
 
-- [ ] T072 [SHARED] Create main AppComponent layout with two-section structure (1/3 top, 2/3 bottom)
-- [ ] T073 [SHARED] Add global styles in `src/styles/styles.scss` (Buddhist theme, box-sizing, resets)
-- [ ] T074 [SHARED] Implement error boundary for JSON load failures
-- [ ] T075 [SHARED] Add loading spinner while quotes.json loads
-- [ ] T076 [P] [SHARED] Optimize bundle size: analyze with `ng build --stats-json` and webpack-bundle-analyzer
-- [ ] T077 [P] [SHARED] Enable production optimizations in `angular.json` (AOT, optimization, budgets)
+- [ ] T083 [SHARED] Create main AppComponent layout with two-section structure (1/3 top, 2/3 bottom)
+- [ ] T084 [SHARED] Add global styles in `src/styles/styles.scss` (Buddhist theme, box-sizing, resets)
+- [ ] T085 [SHARED] Implement error boundary for JSON load failures
+- [ ] T086 [SHARED] Add loading spinner while quotes.json loads
+- [ ] T087 [P] [SHARED] Optimize bundle size: analyze with `ng build --stats-json` and webpack-bundle-analyzer
+- [ ] T088 [P] [SHARED] Enable production optimizations in `angular.json` (AOT, optimization, budgets)
 
 ### Vietnamese UTF-8 Support
 
-- [ ] T078 [P] [SHARED] Add UTF-8 charset meta tag to `index.html`
-- [ ] T079 [P] [SHARED] Verify all `.ts` and `.json` files saved as UTF-8 without BOM
-- [ ] T080 [P] [SHARED] Test Vietnamese quotes render correctly (check diacritics: ắ, ằ, ẳ, ẵ, ặ)
-- [ ] T081 [P] [SHARED] Test on Windows, macOS, iOS, Android for Vietnamese text rendering
+- [ ] T089 [P] [SHARED] Add UTF-8 charset meta tag to `index.html`
+- [ ] T090 [P] [SHARED] Verify all `.ts` and `.json` files saved as UTF-8 without BOM
+- [ ] T091 [P] [SHARED] Test Vietnamese quotes render correctly (check diacritics: ắ, ằ, ẳ, ẵ, ặ)
+- [ ] T092 [P] [SHARED] Test on Windows, macOS, iOS, Android for Vietnamese text rendering
 
 ### Accessibility & Mobile
 
-- [ ] T082 [P] [SHARED] Verify all interactive elements are 44x44px minimum (DevTools inspection)
-- [ ] T083 [P] [SHARED] Verify all text is 16px minimum on mobile viewports
-- [ ] T084 [P] [SHARED] Test keyboard navigation (tab through controls, enter to activate)
-- [ ] T085 [P] [SHARED] Add ARIA labels to buttons (play/pause, next, timer dropdown, search)
-- [ ] T086 [P] [SHARED] Test with screen reader (NVDA or VoiceOver)
-- [ ] T087 [P] [SHARED] Verify no horizontal scrolling on mobile (320px-4K widths)
+- [ ] T093 [P] [SHARED] Verify all interactive elements are 44x44px minimum (DevTools inspection)
+- [ ] T094 [P] [SHARED] Verify all text is 16px minimum on mobile viewports
+- [ ] T095 [P] [SHARED] Test keyboard navigation (tab through controls, enter to activate)
+- [ ] T096 [P] [SHARED] Add ARIA labels to buttons (play/pause, next, timer dropdown, search)
+- [ ] T097 [P] [SHARED] Test with screen reader (NVDA or VoiceOver)
+- [ ] T098 [P] [SHARED] Verify no horizontal scrolling on mobile (320px-4K widths)
 
 ### Documentation
 
-- [ ] T088 [P] [SHARED] Update README.md with project description, setup, deployment instructions
-- [ ] T089 [P] [SHARED] Document audio file licensing in README (CC0 attribution if required)
-- [ ] T090 [P] [SHARED] Add screenshots to README (desktop and mobile views)
-- [ ] T091 [P] [SHARED] Create CONTRIBUTING.md with development workflow and code standards
+- [ ] T099 [P] [SHARED] Update README.md with project description, setup, deployment instructions
+- [ ] T100 [P] [SHARED] Document audio file licensing in README (CC0 attribution if required)
+- [ ] T101 [P] [SHARED] Add screenshots to README (desktop and mobile views)
+- [ ] T102 [P] [SHARED] Create CONTRIBUTING.md with development workflow and code standards
 
 ### Deployment Preparation
 
-- [ ] T092 [SHARED] Test production build locally: `ng build --configuration production --base-href /quotes-platform/`
-- [ ] T093 [SHARED] Verify bundle sizes: main-*.js <500KB, overall <2MB
-- [ ] T094 [SHARED] Create `404.html` copy of `index.html` for GitHub Pages SPA routing
-- [ ] T095 [SHARED] Test local production build with `npx http-server dist/quotes-platform/browser`
-- [ ] T096 [SHARED] Verify all asset paths work with GitHub Pages base href
-- [ ] T097 [SHARED] Create GitHub Pages deployment script in `package.json` (gh-pages package)
-- [ ] T098 [SHARED] Deploy to GitHub Pages and test live site
+- [ ] T103 [SHARED] Test production build locally: `ng build --configuration production --base-href /quotes-platform/`
+- [ ] T104 [SHARED] Verify bundle sizes: main-*.js <500KB, overall <2MB
+- [ ] T105 [SHARED] Create `404.html` copy of `index.html` for GitHub Pages SPA routing
+- [ ] T106 [SHARED] Test local production build with `npx http-server dist/quotes-platform/browser`
+- [ ] T107 [SHARED] Verify all asset paths work with GitHub Pages base href
+- [ ] T108 [SHARED] Create GitHub Pages deployment script in `package.json` (gh-pages package)
+- [ ] T109 [SHARED] Deploy to GitHub Pages and test live site
 
 **Checkpoint**: All user stories integrated, polished, and deployed successfully
 
@@ -242,14 +253,14 @@
 
 **Estimated Time**: 4-6 hours (data curation)
 
-- [ ] T099 [P] [SHARED] Curate Buddhist quotes from public domain sources (sutras, teachings)
-- [ ] T100 [P] [SHARED] Curate Vietnamese Buddhist quotes with proper UTF-8 diacritics
-- [ ] T101 [P] [SHARED] Validate all quotes follow JSON schema (run validation script)
-- [ ] T102 [P] [SHARED] Ensure unique IDs for all 10K quotes (sequential: q0001-q10000)
-- [ ] T103 [P] [SHARED] Categorize quotes (wisdom, compassion, mindfulness, etc.)
-- [ ] T104 [P] [SHARED] Add optional tags for enhanced search
-- [ ] T105 [SHARED] Test initial load performance with 10K quotes (verify <3s on broadband)
-- [ ] T106 [SHARED] Test search performance with 10K quotes (verify <500ms)
+- [ ] T110 [P] [SHARED] Curate Buddhist quotes from public domain sources (sutras, teachings)
+- [ ] T111 [P] [SHARED] Curate Vietnamese Buddhist quotes with proper UTF-8 diacritics
+- [ ] T112 [P] [SHARED] Validate all quotes follow JSON schema (run validation script)
+- [ ] T113 [P] [SHARED] Ensure unique IDs for all 10K quotes (sequential: q0001-q10000)
+- [ ] T114 [P] [SHARED] Categorize quotes (wisdom, compassion, mindfulness, etc.)
+- [ ] T115 [P] [SHARED] Add optional tags for enhanced search
+- [ ] T116 [SHARED] Test initial load performance with 10K quotes (verify <3s on broadband)
+- [ ] T117 [SHARED] Test search performance with 10K quotes (verify <500ms)
 
 ---
 
@@ -263,38 +274,38 @@
 
 ### Test Infrastructure Setup
 
-- [ ] T107 [P] [TEST] Install Playwright: `npm install -D @playwright/test`
-- [ ] T108 [P] [TEST] Install Cucumber: `npm install -D @cucumber/cucumber`
-- [ ] T109 [P] [TEST] Configure Playwright for Cucumber integration
-- [ ] T110 [P] [TEST] Create `tests/features/` directory for Gherkin files
-- [ ] T111 [P] [TEST] Create `tests/steps/` directory for step definitions
-- [ ] T112 [TEST] Add test scripts to `package.json`: `e2e`, `e2e:debug`
+- [ ] T118 [P] [TEST] Install Playwright: `npm install -D @playwright/test`
+- [ ] T119 [P] [TEST] Install Cucumber: `npm install -D @cucumber/cucumber`
+- [ ] T120 [P] [TEST] Configure Playwright for Cucumber integration
+- [ ] T121 [P] [TEST] Create `tests/features/` directory for Gherkin files
+- [ ] T122 [P] [TEST] Create `tests/steps/` directory for step definitions
+- [ ] T123 [TEST] Add test scripts to `package.json`: `e2e`, `e2e:debug`
 
 ### User Story 1 Tests
 
-- [ ] T113 [P] [US1-TEST] Write Gherkin feature: `tests/features/continuous-display.feature` (7 scenarios from spec.md)
-- [ ] T114 [US1-TEST] Implement Playwright step definitions: `tests/steps/continuous-display.steps.ts`
-- [ ] T115 [US1-TEST] Verify tests fail before implementation (red), pass after (green)
+- [ ] T124 [P] [US1-TEST] Write Gherkin feature: `tests/features/continuous-display.feature` (7 scenarios from spec.md)
+- [ ] T125 [US1-TEST] Implement Playwright step definitions: `tests/steps/continuous-display.steps.ts`
+- [ ] T126 [US1-TEST] Verify tests fail before implementation (red), pass after (green)
 
 ### User Story 2 Tests
 
-- [ ] T116 [P] [US2-TEST] Write Gherkin feature: `tests/features/timer-configuration.feature` (4 scenarios)
-- [ ] T117 [US2-TEST] Implement Playwright step definitions: `tests/steps/timer-configuration.steps.ts`
+- [ ] T127 [P] [US2-TEST] Write Gherkin feature: `tests/features/timer-configuration.feature` (4 scenarios)
+- [ ] T128 [US2-TEST] Implement Playwright step definitions: `tests/steps/timer-configuration.steps.ts`
 
 ### User Story 3 Tests
 
-- [ ] T118 [P] [US3-TEST] Write Gherkin feature: `tests/features/quote-grid.feature` (5 scenarios)
-- [ ] T119 [US3-TEST] Implement Playwright step definitions: `tests/steps/quote-grid.steps.ts`
+- [ ] T129 [P] [US3-TEST] Write Gherkin feature: `tests/features/quote-grid.feature` (5 scenarios)
+- [ ] T130 [US3-TEST] Implement Playwright step definitions: `tests/steps/quote-grid.steps.ts`
 
 ### User Story 4 Tests
 
-- [ ] T120 [P] [US4-TEST] Write Gherkin feature: `tests/features/search-filtering.feature` (6 scenarios)
-- [ ] T121 [US4-TEST] Implement Playwright step definitions: `tests/steps/search-filtering.steps.ts`
+- [ ] T131 [P] [US4-TEST] Write Gherkin feature: `tests/features/search-filtering.feature` (6 scenarios)
+- [ ] T132 [US4-TEST] Implement Playwright step definitions: `tests/steps/search-filtering.steps.ts`
 
 ### Edge Case Tests
 
-- [ ] T122 [P] [TEST] Write edge case tests for JSON load failures, localStorage unavailable, audio restrictions
-- [ ] T123 [TEST] Run full test suite on Chromium, Firefox, WebKit browsers
+- [ ] T133 [P] [TEST] Write edge case tests for JSON load failures, localStorage unavailable, audio restrictions
+- [ ] T134 [TEST] Run full test suite on Chromium, Firefox, WebKit browsers
 
 ---
 
@@ -372,15 +383,21 @@ This delivers all 4 user stories + polish + full dataset
 
 ## Progress Tracking
 
-**Current Phase**: Phase 1 - Foundation (Core Infrastructure) ⏳ READY TO START
+**Current Phase**: Phase 5 - User Story 4 (Quote Search and Filtering) ✅ COMPLETE
 
-**Completed Phases**: Phase 0 - Setup ✅
+**Completed Phases**: 
+- Phase 0 - Setup ✅
+- Phase 1 - Foundation ⏳ (In Progress)
+- Phase 2 - User Story 1 (Continuous Display) ⏳ (In Progress)  
+- Phase 3 - User Story 2 (Timer Config) ✅
+- Phase 4 - User Story 3 (Quote Grid) ✅
+- Phase 5 - User Story 4 (Search & Filtering + Display Count + Font Selection) ✅
 
-**Next Milestone**: Foundation Ready (end of Phase 1)
+**Next Milestone**: Phase 6 - Integration & Polish
 
-**Overall Progress**: 9 / 106 tasks completed (8%)
+**Overall Progress**: 82 / 117 tasks completed (70%)
 
-**Last Completed**: Phase 0 - All setup tasks complete (Angular 18+, ESLint, Prettier, npm scripts, GitHub Pages config)
+**Last Completed**: Phase 5 - User Story 4 complete with search filtering, configurable display count (default: 5), and font selection
 
 ---
 

@@ -2,13 +2,13 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vscode-mcp/main/mcp.schema.json",
   "servers": {
     "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--extension"]
+    },
+    "playwright-test": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-playwright"
-      ],
-      "description": "Browser automation server for testing and web scraping with Playwright"
+      "args": ["playwright", "run-test-mcp-server"]
     },
     "figma": {
       "type": "http",

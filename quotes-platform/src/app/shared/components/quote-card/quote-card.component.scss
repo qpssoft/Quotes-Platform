@@ -35,7 +35,7 @@
 }
 
 .quote-text {
-  font-family: var(--font-family);
+  font-family: var(--quote-font-family, var(--font-family)) !important;
   font-size: 1.75rem;
   line-height: 1.8;
   color: var(--text-primary);
@@ -84,7 +84,7 @@
 }
 
 .quote-author {
-  font-family: var(--font-family);
+  font-family: var(--quote-font-family, var(--font-family)) !important;
   font-size: 1.125rem;
   color: var(--text-primary);
   font-weight: 700;
