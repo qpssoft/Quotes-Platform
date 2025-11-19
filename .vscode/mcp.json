@@ -14,11 +14,6 @@
       "type": "http",
       "url": "https://mcp.figma.com/mcp",
       "description": "Remote Figma MCP server for design-to-code workflows"
-    },
-    "figma-desktop": {
-      "type": "http",
-      "url": "http://127.0.0.1:3845/mcp",
-      "description": "Local Figma desktop MCP server for design-to-code workflows with selection support"
     }
   }
 }
