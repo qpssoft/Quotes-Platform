@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vscode-mcp/main/mcp.schema.json",
+  "servers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-playwright"
+      ],
+      "description": "Browser automation server for testing and web scraping with Playwright"
+    },
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp",
+      "description": "Remote Figma MCP server for design-to-code workflows"
+    },
+    "figma-desktop": {
+      "type": "http",
+      "url": "http://127.0.0.1:3845/mcp",
+      "description": "Local Figma desktop MCP server for design-to-code workflows with selection support"
+    }
+  }
+}

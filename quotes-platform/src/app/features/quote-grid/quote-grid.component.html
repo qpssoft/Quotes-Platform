@@ -1,35 +1,53 @@
 <div class="quote-grid-container">
   @if (isLoading()) {
     <div class="loading-state">
+      <div class="loading-spinner"></div>
       <p class="loading-text">Đang tải câu trích dẫn...</p>
     </div>
   } @else {
-    <!-- Search Bar -->
-    <div class="search-bar">
-      <div class="search-input-wrapper">
-        <input
-          type="text"
-          class="search-input"
-          placeholder="Tìm kiếm theo nội dung, tác giả hoặc danh mục..."
-          [value]="searchQuery()"
-          (input)="onSearchChange($any($event.target).value)"
-          aria-label="Tìm kiếm câu trích dẫn"
-        />
-        @if (searchQuery()) {
-          <button 
-            class="clear-button"
-            (click)="clearSearch()"
-            aria-label="Xóa tìm kiếm"
-            type="button">
-            ✕
-          </button>
-        }
+    <!-- Header with Search -->
+    <div class="grid-header">
+      <div class="header-title">
+        <h2>Khám Phá Trích Dẫn</h2>
+        <p class="subtitle">{{ filteredQuotes().length }} câu trích dẫn</p>
+      </div>
+      
+      <div class="search-bar">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2"/>
+            <path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Tìm kiếm theo nội dung, tác giả hoặc danh mục..."
+            [value]="searchQuery()"
+            (input)="onSearchChange($any($event.target).value)"
+            aria-label="Tìm kiếm câu trích dẫn"
+          />
+          @if (searchQuery()) {
+            <button 
+              class="clear-button"
+              (click)="clearSearch()"
+              aria-label="Xóa tìm kiếm"
+              type="button">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          }
+        </div>
       </div>
     </div>
 
     <!-- Grid Results -->
     @if (filteredQuotes().length === 0) {
       <div class="empty-state">
+        <svg class="empty-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+          <path d="M20 28h24M20 36h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+        </svg>
         <p class="empty-text">Không tìm thấy câu trích dẫn nào</p>
         <button class="clear-search-button" (click)="clearSearch()">
           Xóa tìm kiếm

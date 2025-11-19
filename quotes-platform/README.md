@@ -54,6 +54,26 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## AI-Assisted Development
+
+This project uses Model Context Protocol (MCP) servers to enhance AI-assisted development workflows.
+
+### MCP Servers Configured
+
+- **Playwright MCP**: Browser automation for testing and web scraping
+- **Figma MCP (Remote)**: Design-to-code workflows using Figma URLs
+- **Figma MCP (Desktop)**: Local design-to-code with selection support
+
+### Figma Design Agent
+
+Use the `/figma.design` agent to generate code from Figma designs:
+
+```
+/figma.design Generate code for https://figma.com/design/abc123/MyFile?node-id=1-2
+```
+
+For detailed setup and usage instructions, see [.vscode/MCP_README.md](../.vscode/MCP_README.md)
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

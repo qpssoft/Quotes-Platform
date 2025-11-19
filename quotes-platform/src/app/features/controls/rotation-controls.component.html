@@ -1,12 +1,21 @@
 <div class="rotation-controls">
-  <div class="control-row">
+  <div class="control-container">
+    <!-- Play/Pause and Next buttons -->
     <div class="button-group">
       <button 
         class="control-button play-pause"
         (click)="togglePlayPause()"
         [attr.aria-label]="getPlayPauseLabel()"
-        [attr.aria-pressed]="isPlaying">
-        <span class="button-icon">{{ getPlayPauseIcon() }}</span>
+        [attr.aria-pressed]="isPlaying"
+        [class.playing]="isPlaying">
+        <svg class="button-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          @if (isPlaying) {
+            <rect x="6" y="4" width="4" height="16" fill="currentColor" rx="1"/>
+            <rect x="14" y="4" width="4" height="16" fill="currentColor" rx="1"/>
+          } @else {
+            <path d="M8 5v14l11-7z" fill="currentColor"/>
+          }
+        </svg>
         <span class="button-text">{{ getPlayPauseLabel() }}</span>
       </button>
 
@@ -14,13 +23,22 @@
         class="control-button next"
         (click)="nextQuote()"
         aria-label="Câu kế tiếp">
-        <span class="button-icon">⏭</span>
+        <svg class="button-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M5 4v16l8-8z M13 4v16l8-8z" fill="currentColor"/>
+        </svg>
         <span class="button-text">Kế tiếp</span>
       </button>
     </div>
 
+    <!-- Timer selector -->
     <div class="timer-group">
-      <label for="timer-select" class="timer-label">Thời gian:</label>
+      <label for="timer-select" class="timer-label">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+          <path d="M10 6v4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Thời gian:</span>
+      </label>
       <select 
         id="timer-select"
         class="timer-select"
@@ -31,14 +49,9 @@
         <option [value]="10">10 giây</option>
         <option [value]="15">15 giây</option>
         <option [value]="20">20 giây</option>
-        <option [value]="25">25 giây</option>
         <option [value]="30">30 giây</option>
-        <option [value]="35">35 giây</option>
-        <option [value]="40">40 giây</option>
         <option [value]="45">45 giây</option>
-        <option [value]="50">50 giây</option>
-        <option [value]="55">55 giây</option>
-        <option [value]="60">60 giây</option>
+        <option [value]="60">1 phút</option>
       </select>
     </div>
   </div>

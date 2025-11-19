@@ -1,0 +1,26 @@
+# Root .gitignore for Quotes Platform
+
+# VS Code configuration (track MCP config)
+.vscode/*
+!.vscode/mcp.json
+!.vscode/MCP_README.md
+!.vscode/settings.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+
+# IDE files
+.idea/
+*.sublime-*
+
+# Environment files (if any)
+.env
+.env.local
