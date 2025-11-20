@@ -8,6 +8,12 @@
 
 #include "NativeModules.h"
 
+// Our custom native modules
+#include "NativeModules/SystemTrayModule.h"
+#include "NativeModules/GlobalShortcutsModule.h"
+#include "NativeModules/AutoLaunchModule.h"
+#include "NativeModules/MenuModule.h"
+
 // A PackageProvider containing any turbo modules you define within this app project
 struct CompReactPackageProvider
     : winrt::implements<CompReactPackageProvider, winrt::Microsoft::ReactNative::IReactPackageProvider> {

@@ -54,40 +54,6 @@
         "resolved": "10.0.22621.756",
         "contentHash": "7ZL2sFSioYm1Ry067Kw1hg0SCcW5kuVezC2SwjGbcPE61Nn+gTbH86T73G3LcEOVj0S3IZzNuE/29gZvOLS7VA=="
       },
-      "common": {
-        "type": "Project",
-        "dependencies": {
-          "boost": "[1.83.0, )"
-        }
-      },
-      "fmt": {
-        "type": "Project"
-      },
-      "folly": {
-        "type": "Project",
-        "dependencies": {
-          "boost": "[1.83.0, )",
-          "fmt": "[1.0.0, )"
-        }
-      },
-      "microsoft.reactnative": {
-        "type": "Project",
-        "dependencies": {
-          "Common": "[1.0.0, )",
-          "Folly": "[1.0.0, )",
-          "Microsoft.JavaScript.Hermes": "[0.0.0-2507.21007-eda7aef6, )",
-          "Microsoft.WindowsAppSDK": "[1.7.250401001, )",
-          "ReactCommon": "[1.0.0, )",
-          "boost": "[1.83.0, )"
-        }
-      },
-      "reactcommon": {
-        "type": "Project",
-        "dependencies": {
-          "Folly": "[1.0.0, )",
-          "boost": "[1.83.0, )"
-        }
-      },
       "reactnativeasyncstorage": {
         "type": "Project",
         "dependencies": {

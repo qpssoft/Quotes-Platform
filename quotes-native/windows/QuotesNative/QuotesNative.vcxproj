@@ -103,10 +103,18 @@
     <ClInclude Include="AutolinkedNativeModules.g.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="NativeModules\SystemTrayModule.h" />
+    <ClInclude Include="NativeModules\GlobalShortcutsModule.h" />
+    <ClInclude Include="NativeModules\AutoLaunchModule.h" />
+    <ClInclude Include="NativeModules\MenuModule.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QuotesNative.cpp" />
     <ClCompile Include="AutolinkedNativeModules.g.cpp" />
+    <ClCompile Include="NativeModules\SystemTrayModule.cpp" />
+    <ClCompile Include="NativeModules\GlobalShortcutsModule.cpp" />
+    <ClCompile Include="NativeModules\AutoLaunchModule.cpp" />
+    <ClCompile Include="NativeModules\MenuModule.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

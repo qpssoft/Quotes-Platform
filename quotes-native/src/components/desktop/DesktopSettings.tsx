@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch } from 'react-native';
 import { NotificationPosition, KeyboardShortcut } from '@quotes/shared-modules';
 import { Colors, Typography, Spacing } from '../../constants/Colors';
+import { useKeyboardNavigation, useFocusableGrid } from '../../utils/keyboardNavigation';
 
 export interface DesktopSettingsProps {
   notificationPosition: NotificationPosition;
@@ -50,6 +51,23 @@ export function DesktopSettings({
   onKeyboardShortcutChange,
   onAutoLaunchToggle,
 }: DesktopSettingsProps): React.ReactElement {
+  // Keyboard navigation for notification position grid (3 columns, 3 rows)
+  const { focusedIndex, handleKeyNavigation } = useFocusableGrid(3, 3);
+
+  // Handle keyboard navigation
+  useKeyboardNavigation({
+    onArrowUp: () => handleKeyNavigation('up'),
+    onArrowDown: () => handleKeyNavigation('down'),
+    onArrowLeft: () => handleKeyNavigation('left'),
+    onArrowRight: () => handleKeyNavigation('right'),
+    onEnter: () => {
+      // Select focused notification position
+      if (focusedIndex >= 0 && focusedIndex < NOTIFICATION_POSITIONS.length) {
+        onNotificationPositionChange(NOTIFICATION_POSITIONS[focusedIndex].value);
+      }
+    },
+  });
+
   return (
     <ScrollView style={styles.container}>
       {/* Notification Position */}
@@ -59,12 +77,13 @@ export function DesktopSettings({
           Choose where quote notifications appear on your screen
         </Text>
         <View style={styles.grid}>
-          {NOTIFICATION_POSITIONS.map((position) => (
+          {NOTIFICATION_POSITIONS.map((position, index) => (
             <TouchableOpacity
               key={position.value}
               style={[
                 styles.gridItem,
                 notificationPosition === position.value && styles.gridItemSelected,
+                focusedIndex === index && styles.gridItemFocused,
               ]}
               onPress={() => onNotificationPositionChange(position.value)}
             >
@@ -199,6 +218,14 @@ const styles = StyleSheet.create({
   gridItemSelected: {
     backgroundColor: Colors.primaryLight,
     borderColor: Colors.primary,
+  },
+  gridItemFocused: {
+    borderColor: Colors.accent,
+    borderWidth: 3,
+    shadowColor: Colors.accent,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
   },
   gridItemText: {
     fontSize: Typography.sizes.sm,

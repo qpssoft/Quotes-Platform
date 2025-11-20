@@ -21,6 +21,7 @@ import { Colors } from '../constants/Colors';
 import { Spacing } from '../constants/Colors';
 import { DesktopSettings } from '../components/desktop/DesktopSettings';
 import { KeyboardShortcut, NotificationPosition } from '@quotes/shared-modules';
+import { isAutoLaunchEnabled, toggleAutoLaunch } from '../native-modules/AutoLaunch';
 
 const INTERVAL_OPTIONS = [5, 10, 15, 20, 30, 45, 60];
 
@@ -34,6 +35,13 @@ export function SettingsScreen() {
   } = usePreferences();
 
   const [autoLaunchEnabled, setAutoLaunchEnabled] = React.useState(false);
+
+  // Load auto-launch status on mount
+  React.useEffect(() => {
+    if (Platform.OS === 'windows') {
+      isAutoLaunchEnabled().then(setAutoLaunchEnabled);
+    }
+  }, []);
 
   const handleIntervalChange = async (seconds: number) => {
     await updateTimerInterval(seconds);
@@ -53,9 +61,13 @@ export function SettingsScreen() {
   };
 
   const handleAutoLaunchToggle = async () => {
-    setAutoLaunchEnabled(!autoLaunchEnabled);
-    // TODO: Implement auto-launch configuration
-    console.log('Auto-launch toggled:', !autoLaunchEnabled);
+    try {
+      const newState = await toggleAutoLaunch();
+      setAutoLaunchEnabled(newState);
+    } catch (error) {
+      console.error('Failed to toggle auto-launch:', error);
+      Alert.alert('Error', 'Failed to change auto-launch setting');
+    }
   };
 
   const handleReset = async () => {
