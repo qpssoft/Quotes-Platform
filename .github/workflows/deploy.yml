@@ -28,28 +28,51 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: quotes-platform/package-lock.json
+          cache-dependency-path: |
+            quotes-platform/package-lock.json
+            quotes-native/package-lock.json
       
-      - name: Install dependencies
+      # Build Angular App (Main Site)
+      - name: Install Angular dependencies
         working-directory: ./quotes-platform
         run: npm ci
       
-      - name: Build production
+      - name: Build Angular production
         working-directory: ./quotes-platform
         run: npm run build:gh-pages
       
-      - name: Create 404.html for SPA routing
+      - name: Create 404.html for Angular SPA routing
         working-directory: ./quotes-platform
         run: cp dist/quotes-platform/browser/index.html dist/quotes-platform/browser/404.html
       
+      # Build React Native Web App
+      - name: Install React Native dependencies
+        working-directory: ./quotes-native
+        run: npm ci --legacy-peer-deps
+      
+      - name: Build React Native Web
+        working-directory: ./quotes-native
+        run: npm run build:web
+      
+      - name: Create 404.html for React Native SPA routing
+        working-directory: ./quotes-native
+        run: cp dist/index.html dist/404.html
+      
+      # Combine both builds
+      - name: Create combined deployment directory
+        run: |
+          mkdir -p deploy
+          cp -r quotes-platform/dist/quotes-platform/browser/* deploy/
+          mkdir -p deploy/App
+          cp -r quotes-native/dist/* deploy/App/
+      
       - name: Add .nojekyll to disable Jekyll
-        working-directory: ./quotes-platform
-        run: touch dist/quotes-platform/browser/.nojekyll
+        run: touch deploy/.nojekyll
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./quotes-platform/dist/quotes-platform/browser
+          path: ./deploy
 
   deploy:
     environment:

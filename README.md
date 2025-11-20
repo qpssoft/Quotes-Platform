@@ -8,7 +8,8 @@ This is a monorepo containing multiple components:
 
 ```
 Quotes/
-├── quotes-platform/     # Main Angular application
+├── quotes-platform/     # Main Angular application (Web)
+├── quotes-native/       # React Native application (Mobile + Web)
 ├── specs/              # Feature specifications and design documents
 ├── documents/          # Additional documentation and references
 ├── .specify/           # Specify framework configuration and templates
@@ -68,6 +69,28 @@ The primary Angular 18 application providing:
 **Key Documentation:**
 - [Application README](./quotes-platform/README.md)
 - [Contributing Guide](./quotes-platform/CONTRIBUTING.md)
+
+### quotes-native/
+
+React Native cross-platform application with mobile and desktop support:
+
+- **Cross-Platform**: iOS, Android, Web, and Windows desktop
+- **Native Performance**: Platform-specific optimizations
+- **Shared Codebase**: Single codebase for all platforms
+- **Modern UI**: React Native components with native look and feel
+- **Desktop Features**: System tray, global shortcuts, auto-launch (Windows)
+- **Web Deployment**: Static site generation for GitHub Pages
+
+**Technology Stack:**
+- React Native 0.81+ with Expo
+- TypeScript 5.9+
+- React Navigation for routing
+- Expo modules for cross-platform APIs
+- React Native Windows for desktop
+
+**Key Documentation:**
+- [Implementation Status](./specs/002-react-native-expansion/PHASE4_WINDOWS_IMPLEMENTATION_STATUS.md)
+- [C++ Conversion Report](./specs/002-react-native-expansion/PHASE4_CPP_CONVERSION_REPORT.md)
 
 ### specs/
 
@@ -155,20 +178,31 @@ quotes-platform/src/app/
 
 ### GitHub Pages
 
-The application is deployed automatically to GitHub Pages:
+Both applications are deployed automatically to GitHub Pages:
 
-**Live Site**: [https://qpssoft.github.io/Quotes/](https://qpssoft.github.io/Quotes/)
+**Angular App (Main Site)**: [https://qpssoft.github.io/Quotes/](https://qpssoft.github.io/Quotes/)
+
+**React Native Web App**: [https://qpssoft.github.io/Quotes/App](https://qpssoft.github.io/Quotes/App)
 
 #### Automatic Deployment
 Every push to `main` branch triggers automatic deployment via GitHub Actions. The workflow:
-1. Builds from `quotes-platform/` subfolder
-2. Deploys to GitHub Pages
-3. Goes live in 2-5 minutes
+1. Builds Angular app from `quotes-platform/` subfolder → `/Quotes/`
+2. Builds React Native web from `quotes-native/` subfolder → `/Quotes/App/`
+3. Combines both builds into single deployment
+4. Deploys to GitHub Pages
+5. Goes live in 2-5 minutes
 
 #### Manual Deployment
+
+**Angular App:**
 ```bash
-# From quotes-platform directory
 cd quotes-platform
+npm run deploy:gh-pages
+```
+
+**React Native Web:**
+```bash
+cd quotes-native
 npm run deploy:gh-pages
 ```
 
