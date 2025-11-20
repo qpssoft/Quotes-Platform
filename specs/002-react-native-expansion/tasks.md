@@ -153,59 +153,59 @@
 
 ### React Hooks for State Management
 
-- [ ] T065 [P] [US1] Create useQuotes.ts hook in quotes-native/src/hooks/ (load quotes from assets/data/quotes.json, cache in AsyncStorage using NativeStorageService)
-- [ ] T066 [P] [US1] Create useRotation.ts hook in quotes-native/src/hooks/ (auto-rotation logic using RotationService from shared-modules, timer state management)
-- [ ] T067 [P] [US1] Create usePreferences.ts hook in quotes-native/src/hooks/ (load/save UserPreferences using NativeStorageService, provide preference update functions)
+- [X] T065 [P] [US1] Create useQuotes.ts hook in quotes-native/src/hooks/ (load quotes from assets/data/quotes.json, cache in AsyncStorage using NativeStorageService)
+- [X] T066 [P] [US1] Create useRotation.ts hook in quotes-native/src/hooks/ (auto-rotation logic using RotationService from shared-modules, timer state management)
+- [X] T067 [P] [US1] Create usePreferences.ts hook in quotes-native/src/hooks/ (load/save UserPreferences using NativeStorageService, provide preference update functions)
 
 ### Shared Components (Quote Display)
 
-- [ ] T068 [P] [US1] Create QuoteCard.tsx component in quotes-native/src/components/ (display single quote with content, author, category, Buddhist-inspired card styling)
-- [ ] T069 [US1] Add fade-in/fade-out animation to QuoteCard for smooth transitions (using Animated API or React Native Reanimated)
-- [ ] T070 [P] [US1] Create QuoteGrid.tsx component in quotes-native/src/components/ (FlatList rendering with search filtering, 1-column mobile layout)
-- [ ] T071 [US1] Implement QuoteGrid swipe gestures for smooth native scrolling (optimize FlatList performance with getItemLayout)
-- [ ] T072 [P] [US1] Create RotationControls.tsx component in quotes-native/src/components/ (Play/Pause/Next buttons, timer interval picker 5-60s)
+- [X] T068 [P] [US1] Create QuoteCard.tsx component in quotes-native/src/components/ (display single quote with content, author, category, Buddhist-inspired card styling)
+- [X] T069 [US1] Add fade-in/fade-out animation to QuoteCard for smooth transitions (using Animated API or React Native Reanimated)
+- [X] T070 [P] [US1] Create QuoteGrid.tsx component in quotes-native/src/components/ (FlatList rendering with search filtering, 1-column mobile layout)
+- [X] T071 [US1] Implement QuoteGrid swipe gestures for smooth native scrolling (optimize FlatList performance with getItemLayout)
+- [X] T072 [P] [US1] Create RotationControls.tsx component in quotes-native/src/components/ (Play/Pause/Next buttons, timer interval picker 5-60s)
 
 ### Main Screen (Home)
 
-- [ ] T073 [US1] Create HomeScreen.tsx in quotes-native/src/screens/ (main quotes screen with continuous display + quote grid layout)
-- [ ] T074 [US1] Integrate useQuotes hook in HomeScreen to load and display quotes from bundled JSON
-- [ ] T075 [US1] Integrate useRotation hook in HomeScreen for auto-rotation functionality (default 15s interval)
-- [ ] T076 [US1] Implement Play button → start auto-rotation with haptic feedback on each transition (HapticService.trigger)
-- [ ] T077 [US1] Implement Pause button → stop auto-rotation, maintain current quote
-- [ ] T078 [US1] Implement Next button → skip to next random quote immediately with haptic feedback
-- [ ] T079 [US1] Add audio notification on quote transitions (NativeAudioService.play when soundEnabled=true in preferences)
-- [ ] T080 [US1] Implement timer interval picker → update preferences and restart rotation with new interval
+- [X] T073 [US1] Create HomeScreen.tsx in quotes-native/src/screens/ (main quotes screen with continuous display + quote grid layout)
+- [X] T074 [US1] Integrate useQuotes hook in HomeScreen to load and display quotes from bundled JSON
+- [X] T075 [US1] Integrate useRotation hook in HomeScreen for auto-rotation functionality (default 15s interval)
+- [X] T076 [US1] Implement Play button → start auto-rotation with haptic feedback on each transition (HapticService.trigger)
+- [X] T077 [US1] Implement Pause button → stop auto-rotation, maintain current quote
+- [X] T078 [US1] Implement Next button → skip to next random quote immediately with haptic feedback
+- [X] T079 [US1] Add audio notification on quote transitions (NativeAudioService.play when soundEnabled=true in preferences)
+- [X] T080 [US1] Implement timer interval picker → update preferences and restart rotation with new interval
 
 ### Search Screen
 
-- [ ] T081 [US1] Create SearchScreen.tsx in quotes-native/src/screens/ (search input with filtered results)
-- [ ] T082 [US1] Integrate SearchService from shared-modules for full-text search (content, author, category, tags)
-- [ ] T083 [US1] Implement Vietnamese diacritic-insensitive search using text-utils from shared-modules (NFC normalization)
-- [ ] T084 [US1] Display real-time search results in QuoteGrid with <1s response time
-- [ ] T085 [US1] Add category filtering UI (dropdown or chips for Category selection)
+- [X] T081 [US1] Create SearchScreen.tsx in quotes-native/src/screens/ (search input with filtered results)
+- [X] T082 [US1] Integrate SearchService from shared-modules for full-text search (content, author, category, tags)
+- [X] T083 [US1] Implement Vietnamese diacritic-insensitive search using text-utils from shared-modules (NFC normalization)
+- [X] T084 [US1] Display real-time search results in QuoteGrid with <1s response time
+- [X] T085 [US1] Add category filtering UI (dropdown or chips for Category selection)
 
 ### Favorites Screen
 
-- [ ] T086 [US1] Create FavoritesScreen.tsx in quotes-native/src/screens/ (display saved quotes list)
-- [ ] T087 [US1] Implement Add/Remove favorite functionality with heart icon toggle (update preferences.favorites array)
-- [ ] T088 [US1] Persist favorites in AsyncStorage using NativeStorageService
-- [ ] T089 [US1] Display favorites in QuoteGrid component (filter quotes by favorites array)
+- [X] T086 [US1] Create FavoritesScreen.tsx in quotes-native/src/screens/ (display saved quotes list)
+- [X] T087 [US1] Implement Add/Remove favorite functionality with heart icon toggle (update preferences.favorites array)
+- [X] T088 [US1] Persist favorites in AsyncStorage using NativeStorageService
+- [X] T089 [US1] Display favorites in QuoteGrid component (filter quotes by favorites array)
 
 ### Settings Screen
 
-- [ ] T090 [US1] Create SettingsScreen.tsx in quotes-native/src/screens/ (user preferences UI)
-- [ ] T091 [P] [US1] Add timer interval picker (Slider 5-60s, step: 5s, default: 15s)
-- [ ] T092 [P] [US1] Add sound toggle switch (enable/disable audio notifications on transitions)
-- [ ] T093 [P] [US1] Add haptic toggle switch (enable/disable haptic feedback on transitions)
+- [X] T090 [US1] Create SettingsScreen.tsx in quotes-native/src/screens/ (user preferences UI)
+- [X] T091 [P] [US1] Add timer interval picker (Slider 5-60s, step: 5s, default: 15s)
+- [X] T092 [P] [US1] Add sound toggle switch (enable/disable audio notifications on transitions)
+- [X] T093 [P] [US1] Add haptic toggle switch (enable/disable haptic feedback on transitions)
 - [ ] T094 [US1] Add background mode toggle with permission request (show battery impact warning "~5-10% drain per hour" using BackgroundService)
-- [ ] T095 [US1] Persist all preference changes using usePreferences hook (save to AsyncStorage immediately)
+- [X] T095 [US1] Persist all preference changes using usePreferences hook (save to AsyncStorage immediately)
 
 ### Navigation Setup
 
-- [ ] T096 [US1] Create AppNavigator.tsx in quotes-native/src/navigation/ (Bottom tab navigator: Home, Search, Favorites, Settings)
-- [ ] T097 [US1] Configure tab bar with Buddhist-inspired icons and styling (calming colors from Colors.ts)
-- [ ] T098 [US1] Add platform-specific tab bar styling (iOS vs Android native patterns)
-- [ ] T099 [US1] Update App.tsx to wrap AppNavigator with NavigationContainer
+- [X] T096 [US1] Create AppNavigator.tsx in quotes-native/src/navigation/ (Bottom tab navigator: Home, Search, Favorites, Settings)
+- [X] T097 [US1] Configure tab bar with Buddhist-inspired icons and styling (calming colors from Colors.ts)
+- [X] T098 [US1] Add platform-specific tab bar styling (iOS vs Android native patterns)
+- [X] T099 [US1] Update App.tsx to wrap AppNavigator with NavigationContainer
 
 ### Testing & Refinement
 
