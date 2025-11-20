@@ -1,4 +1,4 @@
-# Root .gitignore for Quotes Platform
+# Root .gitignore for Quotes Platform Monorepo
 
 # VS Code configuration (track MCP config)
 .vscode/*
@@ -21,10 +21,41 @@ Thumbs.db
 .idea/
 *.sublime-*
 
-# Environment files (if any)
+# Environment files
 .env
 .env.local
 
+# Node modules (all workspaces)
+node_modules/
 /quotes-platform/node_modules/
+/quotes-native/node_modules/
+/shared-modules/node_modules/
+
+# Build outputs
+dist/
+build/
 /quotes-platform/dist/
+/shared-modules/dist/
+
+# React Native / Expo
+.expo/
+.expo-shared/
+
+# iOS
+/quotes-native/ios/Pods/
+/quotes-native/ios/*.xcworkspace/xcuserdata/
+/quotes-native/ios/*.xcodeproj/xcuserdata/
+*.ipa
+
+# Android
+/quotes-native/android/.gradle/
+/quotes-native/android/.idea/
+/quotes-native/android/app/build/
+*.apk
+*.aab
+
+# Test results
 /quotes-platform/test-results
+/quotes-platform/coverage
+/quotes-native/__tests__/coverage
+/shared-modules/coverage

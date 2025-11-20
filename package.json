@@ -1,0 +1,28 @@
+{
+  "name": "quotes-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Multi-platform Buddhist quotes application - Monorepo",
+  "workspaces": [
+    "quotes-platform",
+    "quotes-native",
+    "shared-modules"
+  ],
+  "scripts": {
+    "web": "cd quotes-platform && npm start",
+    "mobile": "cd quotes-native && expo start",
+    "ios": "cd quotes-native && expo start --ios",
+    "android": "cd quotes-native && expo start --android",
+    "windows": "cd quotes-native && npx react-native run-windows",
+    "macos": "cd quotes-native && npx react-native run-macos",
+    "test": "yarn workspaces run test",
+    "lint": "yarn workspaces run lint",
+    "build:shared": "cd shared-modules && yarn build"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "yarn": ">=1.22.0"
+  },
+  "author": "qpssoft",
+  "license": "MIT"
+}
