@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { QuoteCardComponent } from '../../shared/components/quote-card/quote-card.component';
@@ -33,10 +33,16 @@ export class QuoteDisplayComponent implements OnInit, OnDestroy {
   // Reactive signals from rotation service
   currentQuote = this.rotationService.currentQuote;
   isPlaying = this.rotationService.timer;
+  error = signal<string | null>(null);
 
   async ngOnInit(): Promise<void> {
-    // Start rotation on component init
-    await this.rotationService.start();
+    try {
+      // Start rotation on component init
+      await this.rotationService.start();
+    } catch (err) {
+      this.error.set('Unable to load quotes. Please check your internet connection and try again.');
+      console.error('Failed to start rotation:', err);
+    }
   }
 
   ngOnDestroy(): void {

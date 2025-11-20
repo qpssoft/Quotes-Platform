@@ -9,11 +9,11 @@
     <div class="grid-header">
       <div class="header-title">
         <h2>Khám Phá Trích Dẫn</h2>
-        <p class="subtitle">{{ filteredQuotes().length }} câu trích dẫn</p>
+        <p class="subtitle" data-testid="result-count">{{ filteredQuotes().length }} câu trích dẫn</p>
       </div>
       
       <!-- Filter Controls -->
-      <div class="filter-controls">
+      <div class="filter-controls" data-testid="filter-controls">
         <!-- Display Count Dropdown -->
         <div class="filter-group">
           <label for="displayCount" class="filter-label">
@@ -27,6 +27,7 @@
           <select 
             id="displayCount"
             class="filter-select"
+            data-testid="display-count"
             [ngModel]="displayCount()"
             (ngModelChange)="onDisplayCountChange($event)"
             aria-label="Số lượng câu trích dẫn hiển thị">
@@ -47,6 +48,7 @@
           <select 
             id="fontSelect"
             class="filter-select"
+            data-testid="font-selector"
             [ngModel]="selectedFont()"
             (ngModelChange)="onFontChange($event)"
             aria-label="Chọn font chữ">
@@ -66,6 +68,7 @@
           <input
             type="text"
             class="search-input"
+            data-testid="search-input"
             placeholder="Tìm kiếm theo nội dung, tác giả hoặc danh mục..."
             [value]="searchQuery()"
             (input)="onSearchChange($any($event.target).value)"
@@ -74,6 +77,7 @@
           @if (searchQuery()) {
             <button 
               class="clear-button"
+              data-testid="clear-search"
               (click)="clearSearch()"
               aria-label="Xóa tìm kiếm"
               type="button">
@@ -88,7 +92,7 @@
 
     <!-- Grid Results -->
     @if (filteredQuotes().length === 0) {
-      <div class="empty-state">
+      <div class="empty-state" data-testid="no-results">
         <svg class="empty-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
           <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2" opacity="0.3"/>
           <path d="M20 28h24M20 36h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
@@ -99,7 +103,7 @@
         </button>
       </div>
     } @else {
-      <div class="quote-grid">
+      <div class="quote-grid" data-testid="quote-grid">
         @for (quote of filteredQuotes(); track quote.id) {
           <div class="grid-item">
             <app-quote-card [quote]="quote"></app-quote-card>

@@ -30,46 +30,18 @@
         <div class="brand-icon">☸</div>
         <h1 class="brand-title">{{ title }}</h1>
       </div>
-      <nav class="header-nav">
-        <button 
-          class="nav-button" 
-          [class.active]="currentView === 'display'"
-          (click)="setView('display')"
-          aria-label="Display view">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M10 3L3 8V17H7V12H13V17H17V8L10 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span>Hiển Thị</span>
-        </button>
-        <button 
-          class="nav-button" 
-          [class.active]="currentView === 'grid'"
-          (click)="setView('grid')"
-          aria-label="Grid view">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <rect x="3" y="3" width="6" height="6" stroke="currentColor" stroke-width="2" rx="1"/>
-            <rect x="11" y="3" width="6" height="6" stroke="currentColor" stroke-width="2" rx="1"/>
-            <rect x="3" y="11" width="6" height="6" stroke="currentColor" stroke-width="2" rx="1"/>
-            <rect x="11" y="11" width="6" height="6" stroke="currentColor" stroke-width="2" rx="1"/>
-          </svg>
-          <span>Lưới</span>
-        </button>
-      </nav>
     </div>
   </header>
 
   <!-- Main Content -->
   <main class="app-main">
-    @if (currentView === 'display') {
-      <div class="display-view">
-        <app-quote-display></app-quote-display>
-        <app-rotation-controls></app-rotation-controls>
-      </div>
-    } @else {
-      <div class="grid-view">
-        <app-quote-grid></app-quote-grid>
-      </div>
-    }
+    <div class="continuous-display-section">
+      <app-quote-display></app-quote-display>
+      <app-rotation-controls></app-rotation-controls>
+    </div>
+    <div class="quote-grid-section">
+      <app-quote-grid></app-quote-grid>
+    </div>
   </main>
 
   <!-- Footer -->

@@ -4,6 +4,7 @@
     <div class="button-group">
       <button 
         class="control-button play-pause"
+        [attr.data-testid]="isPlaying ? 'pause-button' : 'play-button'"
         (click)="togglePlayPause()"
         [attr.aria-label]="getPlayPauseLabel()"
         [attr.aria-pressed]="isPlaying"
@@ -21,6 +22,7 @@
 
       <button 
         class="control-button next"
+        data-testid="next-button"
         (click)="nextQuote()"
         aria-label="Câu kế tiếp">
         <svg class="button-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -42,16 +44,22 @@
       <select 
         id="timer-select"
         class="timer-select"
+        data-testid="timer-dropdown"
         [value]="timer().interval"
         (change)="onTimerChange($event)"
         aria-label="Chọn khoảng thời gian">
-        <option [value]="5">5 giây</option>
-        <option [value]="10">10 giây</option>
-        <option [value]="15">15 giây</option>
-        <option [value]="20">20 giây</option>
-        <option [value]="30">30 giây</option>
-        <option [value]="45">45 giây</option>
-        <option [value]="60">1 phút</option>
+        <option [value]="5" [selected]="timer().interval === 5">5 giây</option>
+        <option [value]="10" [selected]="timer().interval === 10">10 giây</option>
+        <option [value]="15" [selected]="timer().interval === 15">15 giây</option>
+        <option [value]="20" [selected]="timer().interval === 20">20 giây</option>
+        <option [value]="25" [selected]="timer().interval === 25">25 giây</option>
+        <option [value]="30" [selected]="timer().interval === 30">30 giây</option>
+        <option [value]="35" [selected]="timer().interval === 35">35 giây</option>
+        <option [value]="40" [selected]="timer().interval === 40">40 giây</option>
+        <option [value]="45" [selected]="timer().interval === 45">45 giây</option>
+        <option [value]="50" [selected]="timer().interval === 50">50 giây</option>
+        <option [value]="55" [selected]="timer().interval === 55">55 giây</option>
+        <option [value]="60" [selected]="timer().interval === 60">1 phút</option>
       </select>
     </div>
   </div>

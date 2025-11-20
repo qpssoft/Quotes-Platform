@@ -1,13 +1,13 @@
-<div class="quote-card">
+<div class="quote-card" data-testid="quote-card">
   <div class="quote-content">
-    <blockquote class="quote-text">
+    <blockquote class="quote-text" data-testid="quote-content">
       "{{ quote.content }}"
     </blockquote>
   </div>
   
   <div class="quote-footer">
-    <div class="quote-author">— {{ quote.author }}</div>
-    <div class="quote-category" [ngClass]="getCategoryClass()">
+    <div class="quote-author" data-testid="quote-author">— {{ quote.author }}</div>
+    <div class="quote-category" [ngClass]="getCategoryClass()" data-testid="quote-category">
       {{ getCategoryDisplay() }}
     </div>
   </div>

@@ -24,3 +24,7 @@ Thumbs.db
 # Environment files (if any)
 .env
 .env.local
+
+/quotes-platform/node_modules/
+/quotes-platform/dist/
+/quotes-platform/test-results
