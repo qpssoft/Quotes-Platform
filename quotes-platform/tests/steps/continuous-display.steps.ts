@@ -1,7 +1,7 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { BuddhistQuotesWorld } from '../support/world';
-
+import { TestTimeout, secondsToMs } from '../support/test-timeouts';
 // Background steps
 Given('I open the Buddhist quotes application', async function (this: BuddhistQuotesWorld) {
   await this.page!.goto('http://localhost:4200');
@@ -37,7 +37,7 @@ Given('the application has loaded successfully', async function (this: BuddhistQ
 // Scenario: Initial quote display on page load
 When('the page loads', async function (this: BuddhistQuotesWorld) {
   // Page already loaded in background
-  await this.page!.waitForTimeout(1000);
+  await this.page!.waitForTimeout(TestTimeout.STANDARD);
 });
 
 Then('I should see a quote displayed at the top of the screen', async function (this: BuddhistQuotesWorld) {
@@ -95,7 +95,7 @@ Given('I see the first quote displayed', async function (this: BuddhistQuotesWor
 });
 
 When('I wait for {int} seconds', async function (this: BuddhistQuotesWorld, seconds: number) {
-  await this.page!.waitForTimeout(seconds * 1000);
+  await this.page!.waitForTimeout(secondsToMs(seconds));
 });
 
 Then('a new quote should be displayed', async function (this: BuddhistQuotesWorld) {
@@ -103,7 +103,7 @@ Then('a new quote should be displayed', async function (this: BuddhistQuotesWorl
   await expect(quoteContent).toBeVisible();
   
   // Wait a bit for the new quote to settle
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('the new quote should be different from the previous quote', async function (this: BuddhistQuotesWorld) {
@@ -133,12 +133,12 @@ Given('audio is enabled in my browser', async function (this: BuddhistQuotesWorl
   await this.context!.grantPermissions(['clipboard-read', 'clipboard-write']);
   
   // Just verify the test can proceed - actual audio permission is handled by browser
-  await this.page!.waitForTimeout(100);
+  await this.page!.waitForTimeout(TestTimeout.SHORT);
 });
 
 When('the quote rotates to the next one', async function (this: BuddhistQuotesWorld) {
   // Wait for rotation
-  await this.page!.waitForTimeout(16000); // 15s + 1s buffer
+  await this.page!.waitForTimeout(TestTimeout.ROTATION_INTERVAL);
 });
 
 Then('I should hear a soft notification sound', async function (this: BuddhistQuotesWorld) {
@@ -201,13 +201,13 @@ Given('I see a quote displayed with auto-rotation active', async function (this:
 
 When('I click the pause button', async function (this: BuddhistQuotesWorld) {
   await this.page!.click('[data-testid="pause-button"]');
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('the auto-rotation should stop', async function (this: BuddhistQuotesWorld) {
   const display = this.page!.locator('[data-testid="quote-display"]');
   const initialQuote = await display.locator('[data-testid="quote-content"]').textContent();
-  await this.page!.waitForTimeout(16000); // Wait longer than rotation interval
+  await this.page!.waitForTimeout(TestTimeout.ROTATION_INTERVAL); // Wait longer than rotation interval
   const currentQuote = await display.locator('[data-testid="quote-content"]').textContent();
   
   expect(currentQuote).toBe(initialQuote); // Should be the same quote
@@ -220,7 +220,7 @@ Then('the current quote should remain displayed', async function (this: Buddhist
 
 When('I click the play button', async function (this: BuddhistQuotesWorld) {
   await this.page!.click('[data-testid="play-button"]');
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('the auto-rotation should resume', async function (this: BuddhistQuotesWorld) {
@@ -229,7 +229,7 @@ Then('the auto-rotation should resume', async function (this: BuddhistQuotesWorl
 });
 
 Then('a new quote should appear after 15 seconds', async function (this: BuddhistQuotesWorld) {
-  await this.page!.waitForTimeout(16000);
+  await this.page!.waitForTimeout(TestTimeout.ROTATION_INTERVAL);
   const quoteDisplay = await this.page!.locator('[data-testid="quote-display"]');
   await expect(quoteDisplay).toBeVisible();
   
@@ -243,31 +243,31 @@ When('I click the next button', async function (this: BuddhistQuotesWorld) {
 });
 
 Then('a different quote should be displayed immediately', async function (this: BuddhistQuotesWorld) {
-  await this.page!.waitForTimeout(1000);
+  await this.page!.waitForTimeout(TestTimeout.STANDARD);
   const quoteDisplay = await this.page!.locator('[data-testid="quote-display"]');
   await expect(quoteDisplay).toBeVisible();
 });
 
 Then('the 15-second timer should restart', async function (this: BuddhistQuotesWorld) {
   // Timer restart is internal - we can verify by checking rotation continues
-  await this.page!.waitForTimeout(1000);
+  await this.page!.waitForTimeout(TestTimeout.STANDARD);
 });
 
 Then('audio notification should play', async function (this: BuddhistQuotesWorld) {
   // Similar to earlier audio check
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 // Scenario: Consecutive quote prevention
 Given('I have seen {int} different quotes', async function (this: BuddhistQuotesWorld, count: number) {
   for (let i = 0; i < count; i++) {
     await this.page!.click('[data-testid="next-button"]');
-    await this.page!.waitForTimeout(1000);
+    await this.page!.waitForTimeout(TestTimeout.STANDARD);
   }
 });
 
 When('quotes continue to rotate', async function (this: BuddhistQuotesWorld) {
-  await this.page!.waitForTimeout(2000);
+  await this.page!.waitForTimeout(TestTimeout.ROTATION_STARTUP);
 });
 
 Then('none of the last {int} quotes should appear consecutively', async function (this: BuddhistQuotesWorld, count: number) {
@@ -291,7 +291,7 @@ Given('the quotes.json file is unavailable', async function (this: BuddhistQuote
 
 When('I open the application', async function (this: BuddhistQuotesWorld) {
   await this.page!.goto('http://localhost:4200');
-  await this.page!.waitForTimeout(3000);
+  await this.page!.waitForTimeout(TestTimeout.ERROR_SCENARIO);
 });
 
 Then('I should see a user-friendly error message', async function (this: BuddhistQuotesWorld) {

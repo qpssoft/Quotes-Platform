@@ -1,6 +1,7 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { BuddhistQuotesWorld } from '../support/world';
+import { TestTimeout, secondsToMs } from '../support/test-timeouts';
 
 // Scenario: Default timer interval
 Then('the timer dropdown should show {string} selected', async function (this: BuddhistQuotesWorld, interval: string) {
@@ -22,7 +23,7 @@ Then('the timer dropdown should show {string} selected', async function (this: B
 
 Then('quotes should rotate every {int} seconds', async function (this: BuddhistQuotesWorld, seconds: number) {
   // Wait for rotation interval + buffer
-  await this.page!.waitForTimeout((seconds + 1) * 1000);
+  await this.page!.waitForTimeout(secondsToMs(seconds, TestTimeout.STANDARD));
   
   // Check if quote display is still functional (use .first() to avoid strict mode)
   const quoteContent = await this.page!.locator('[data-testid="quote-content"]').first().textContent();
@@ -39,12 +40,12 @@ Given('I see the timer dropdown set to {string}', async function (this: Buddhist
 When('I select {string} from the timer dropdown', async function (this: BuddhistQuotesWorld, interval: string) {
   const seconds = interval.replace(' seconds', '');
   await this.page!.selectOption('[data-testid="timer-dropdown"]', seconds);
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('the next quote should appear after {int} seconds', async function (this: BuddhistQuotesWorld, seconds: number) {
   // Wait for the specified interval
-  await this.page!.waitForTimeout((seconds + 1) * 1000);
+  await this.page!.waitForTimeout(secondsToMs(seconds, TestTimeout.STANDARD));
   
   const quoteContent = await this.page!.locator('[data-testid="quote-content"]').first().textContent();
   expect(quoteContent).toBeTruthy();
@@ -53,27 +54,27 @@ Then('the next quote should appear after {int} seconds', async function (this: B
 Then('subsequent quotes should rotate every {int} seconds', async function (this: BuddhistQuotesWorld, seconds: number) {
   // Verify rotation timing is set correctly
   console.log(`Rotation configured for ${seconds} seconds`);
-  await this.page!.waitForTimeout(1000);
+  await this.page!.waitForTimeout(TestTimeout.STANDARD);
 });
 
 // Scenario: Timer persistence
 Given('I have set the timer to {string}', async function (this: BuddhistQuotesWorld, interval: string) {
   const seconds = interval.replace(' seconds', '');
   await this.page!.selectOption('[data-testid="timer-dropdown"]', seconds);
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 When('I refresh the page', async function (this: BuddhistQuotesWorld) {
   await this.page!.reload();
   await this.page!.waitForLoadState('networkidle');
-  await this.page!.waitForTimeout(1000);
+  await this.page!.waitForTimeout(TestTimeout.STANDARD);
 });
 
 // Scenario: Timer change when paused
 Given('I have paused the quote rotation', async function (this: BuddhistQuotesWorld) {
   // Wait for controls to be fully rendered
   await this.page!.waitForSelector('[data-testid="timer-dropdown"]', { timeout: 5000 });
-  await this.page!.waitForTimeout(2000); // Give rotation service time to start
+  await this.page!.waitForTimeout(TestTimeout.ROTATION_STARTUP); // Give rotation service time to start
   
   // Check if rotation is playing (pause button visible) or not (play button visible)
   const pauseButton = await this.page!.locator('[data-testid="pause-button"]').isVisible({ timeout: 5000 }).catch(() => false);
@@ -82,7 +83,7 @@ Given('I have paused the quote rotation', async function (this: BuddhistQuotesWo
   if (playButton) {
     // Rotation not started, start it first then pause
     await this.page!.click('[data-testid="play-button"]');
-    await this.page!.waitForTimeout(1000);
+    await this.page!.waitForTimeout(TestTimeout.STANDARD);
     await this.page!.waitForSelector('[data-testid="pause-button"]', { timeout: 5000 });
     await this.page!.click('[data-testid="pause-button"]');
   } else if (pauseButton) {
@@ -92,18 +93,18 @@ Given('I have paused the quote rotation', async function (this: BuddhistQuotesWo
     throw new Error('Could not find either play or pause button');
   }
   
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 When('I change the timer to {string}', async function (this: BuddhistQuotesWorld, interval: string) {
   const seconds = interval.replace(' seconds', '');
   await this.page!.selectOption('[data-testid="timer-dropdown"]', seconds);
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 When('I resume the rotation', async function (this: BuddhistQuotesWorld) {
   await this.page!.click('[data-testid="play-button"]');
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 // Scenario: Timer change when playing
@@ -116,18 +117,18 @@ Given('quotes are rotating every {int} seconds', async function (this: BuddhistQ
 
 Given('{int} seconds have passed since the last rotation', async function (this: BuddhistQuotesWorld, seconds: number) {
   // Wait for specified time
-  await this.page!.waitForTimeout(seconds * 1000);
+  await this.page!.waitForTimeout(secondsToMs(seconds));
 });
 
 Then('the current quote should complete its remaining {int} seconds', async function (this: BuddhistQuotesWorld, seconds: number) {
   // Wait for remaining time
-  await this.page!.waitForTimeout((seconds + 1) * 1000);
+  await this.page!.waitForTimeout(secondsToMs(seconds, TestTimeout.STANDARD));
 });
 
 // Scenario: All timer options available
 When('I click the timer dropdown', async function (this: BuddhistQuotesWorld) {
   await this.page!.click('[data-testid="timer-dropdown"]');
-  await this.page!.waitForTimeout(300);
+  await this.page!.waitForTimeout(TestTimeout.SHORT_MEDIUM);
 });
 
 Then('I should see options for: {int}, {int}, {int}, {int}, {int}, {int}, {int}, {int}, {int}, {int}, {int}, {int} seconds', 
@@ -189,7 +190,7 @@ Given('localStorage is disabled in my browser', async function (this: BuddhistQu
 
 When('I change the timer setting', async function (this: BuddhistQuotesWorld) {
   await this.page!.selectOption('[data-testid="timer-dropdown"]', '30');
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('the timer should work with the new setting', async function (this: BuddhistQuotesWorld) {
@@ -207,7 +208,7 @@ Then('the application should not display an error', async function (this: Buddhi
 Then('the timer should reset to {int} seconds on page refresh', async function (this: BuddhistQuotesWorld, defaultSeconds: number) {
   await this.page!.reload();
   await this.page!.waitForLoadState('networkidle');
-  await this.page!.waitForTimeout(1000);
+  await this.page!.waitForTimeout(TestTimeout.STANDARD);
   
   const dropdown = await this.page!.locator('[data-testid="timer-dropdown"]');
   const selectedValue = await dropdown.inputValue();

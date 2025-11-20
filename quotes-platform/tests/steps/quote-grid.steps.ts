@@ -1,6 +1,7 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { BuddhistQuotesWorld } from '../support/world';
+import { TestTimeout } from '../support/test-timeouts';
 
 // Background steps
 Given('the quote grid is visible', async function (this: BuddhistQuotesWorld) {
@@ -44,7 +45,7 @@ Then('the grid should display multiple quote cards', async function (this: Buddh
 // Responsive layouts
 Given('I am viewing the application on a desktop \\({int}px width)', async function (this: BuddhistQuotesWorld, width: number) {
   await this.page!.setViewportSize({ width, height: 720 });
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('the quote grid should display {int} columns', async function (this: BuddhistQuotesWorld, columns: number) {
@@ -89,7 +90,7 @@ Then('each quote card should be clearly readable', async function (this: Buddhis
 
 Given('I am viewing the application on a tablet \\({int}px width)', async function (this: BuddhistQuotesWorld, width: number) {
   await this.page!.setViewportSize({ width, height: 1024 });
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('touch targets should be at least {int}x{int} pixels', async function (this: BuddhistQuotesWorld, width: number, height: number) {
@@ -107,7 +108,7 @@ Then('touch targets should be at least {int}x{int} pixels', async function (this
 
 Given('I am viewing the application on a mobile device \\({int}px width)', async function (this: BuddhistQuotesWorld, width: number) {
   await this.page!.setViewportSize({ width, height: 667 });
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('I should be able to scroll vertically to see more quotes', async function (this: BuddhistQuotesWorld) {
@@ -199,12 +200,12 @@ Then('shorter quotes should not create excessive whitespace', async function (th
 
 // Scrolling
 Given('the grid contains more quotes than fit in the viewport', async function (this: BuddhistQuotesWorld) {
-  await this.page!.waitForTimeout(1000);
+  await this.page!.waitForTimeout(TestTimeout.STANDARD);
 });
 
 When('I scroll down', async function (this: BuddhistQuotesWorld) {
   await this.page!.mouse.wheel(0, 500);
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('additional quotes should be visible', async function (this: BuddhistQuotesWorld) {

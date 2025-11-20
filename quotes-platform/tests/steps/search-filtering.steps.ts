@@ -1,24 +1,25 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { BuddhistQuotesWorld } from '../support/world';
+import { TestTimeout } from '../support/test-timeouts';
 
 // Scenario: Full-text search
 When('I type {string} in the search box', async function (this: BuddhistQuotesWorld, searchTerm: string) {
   const searchBox = await this.page!.locator('[data-testid="search-input"]');
   await searchBox.fill(searchTerm);
-  await this.page!.waitForTimeout(600); // Allow for debounce if implemented
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM_DEBOUNCE); // Allow for debounce if implemented
 });
 
 Then('the grid should display only quotes containing {string} in content', async function (this: BuddhistQuotesWorld, term: string) {
   // Only check cards in the grid section, not the display section
   const grid = this.page!.locator('[data-testid="quote-grid"]');
-  await this.page!.waitForTimeout(1500); // Wait for search to complete
+  await this.page!.waitForTimeout(TestTimeout.EMPTY_STATE); // Wait for search to complete
   
   const quoteCards = await grid.locator('[data-testid="quote-card"]').all();
   
   // If no results, check if empty state is shown (search term may not exist in Vietnamese content)
   if (quoteCards.length === 0) {
-    await this.page!.waitForTimeout(1000); // Wait for empty state to render
+    await this.page!.waitForTimeout(TestTimeout.STANDARD); // Wait for empty state to render
     const emptyState = this.page!.locator('[data-testid="no-results"]');
     const isVisible = await emptyState.isVisible().catch(() => false);
     
@@ -112,7 +113,7 @@ Then('quotes with {string} in content or author should also appear', async funct
 When('I type {string} in uppercase', async function (this: BuddhistQuotesWorld, term: string) {
   const searchBox = await this.page!.locator('[data-testid="search-input"]');
   await searchBox.fill(term);
-  await this.page!.waitForTimeout(600);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM_DEBOUNCE);
 });
 
 Then('the results should match {string}, {string}, and {string}', async function (this: BuddhistQuotesWorld, variant1: string, variant2: string, variant3: string) {
@@ -123,14 +124,14 @@ Then('the results should match {string}, {string}, and {string}', async function
 
 Then('the search should be case-insensitive', async function (this: BuddhistQuotesWorld) {
   // Already verified by previous step
-  await this.page!.waitForTimeout(100);
+  await this.page!.waitForTimeout(TestTimeout.SHORT);
 });
 
 // Scenario: Clear search
 Given('I have searched for {string}', async function (this: BuddhistQuotesWorld, term: string) {
   const searchBox = await this.page!.locator('[data-testid="search-input"]');
   await searchBox.fill(term);
-  await this.page!.waitForTimeout(600);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM_DEBOUNCE);
 });
 
 Given('I see filtered results', async function (this: BuddhistQuotesWorld) {
@@ -141,7 +142,7 @@ Given('I see filtered results', async function (this: BuddhistQuotesWorld) {
 When('I click the clear search button \\(X icon)', async function (this: BuddhistQuotesWorld) {
   const clearButton = await this.page!.locator('[data-testid="clear-search"]');
   await clearButton.click();
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('the search box should be empty', async function (this: BuddhistQuotesWorld) {
@@ -197,7 +198,7 @@ Given('the default display count is {int}', async function (this: BuddhistQuotes
 
 When('I select {string} from the display count dropdown', async function (this: BuddhistQuotesWorld, count: string) {
   await this.page!.selectOption('[data-testid="display-count"]', count);
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('the grid should show {int} quotes', async function (this: BuddhistQuotesWorld, count: number) {
@@ -223,13 +224,13 @@ Then('scrolling should work if needed', async function (this: BuddhistQuotesWorl
 // Scenario: Display count with search
 Given('I have set display count to {string}', async function (this: BuddhistQuotesWorld, count: string) {
   await this.page!.selectOption('[data-testid="display-count"]', count);
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 When('I search for {string}', async function (this: BuddhistQuotesWorld, term: string) {
   const searchBox = await this.page!.locator('[data-testid="search-input"]');
   await searchBox.fill(term);
-  await this.page!.waitForTimeout(600);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM_DEBOUNCE);
 });
 
 Then('the grid should show up to {int} matching quotes', async function (this: BuddhistQuotesWorld, count: number) {
@@ -257,7 +258,7 @@ Given('quotes are displayed in the default {string} font', async function (this:
 
 When('I select {string} from the font dropdown', async function (this: BuddhistQuotesWorld, font: string) {
   await this.page!.selectOption('[data-testid="font-selector"]', font);
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('all quote content should change to {string} font', async function (this: BuddhistQuotesWorld, font: string) {
@@ -314,7 +315,7 @@ Then('readability should be maintained', async function (this: BuddhistQuotesWor
 // Scenario: Font persistence
 Given('I have selected {string} font', async function (this: BuddhistQuotesWorld, font: string) {
   await this.page!.selectOption('[data-testid="font-selector"]', font);
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 Then('the quotes should still display in {string} font', async function (this: BuddhistQuotesWorld, font: string) {
@@ -333,7 +334,7 @@ Then('my font preference should be remembered', async function (this: BuddhistQu
 
 // Scenario: Search performance
 Given('the application has loaded {int} quotes', async function (this: BuddhistQuotesWorld, count: number) {
-  await this.page!.waitForTimeout(1000);
+  await this.page!.waitForTimeout(TestTimeout.STANDARD);
   console.log(`Application loaded with ${count} quotes`);
   // Assume quotes are loaded
 });
@@ -341,7 +342,7 @@ Given('the application has loaded {int} quotes', async function (this: BuddhistQ
 When('I type a search term', async function (this: BuddhistQuotesWorld) {
   const searchBox = await this.page!.locator('[data-testid="search-input"]');
   await searchBox.fill('wisdom');
-  await this.page!.waitForTimeout(100);
+  await this.page!.waitForTimeout(TestTimeout.SHORT);
 });
 
 Then('results should appear in less than {int} milliseconds', async function (this: BuddhistQuotesWorld, ms: number) {
@@ -359,13 +360,13 @@ Then('the UI should remain responsive', async function (this: BuddhistQuotesWorl
 
 Then('there should be no noticeable lag', async function (this: BuddhistQuotesWorld) {
   // Verify page is not frozen
-  await this.page!.waitForTimeout(100);
+  await this.page!.waitForTimeout(TestTimeout.SHORT);
 });
 
 // Scenario: Responsive controls
 Given('I am viewing the application on a mobile device', async function (this: BuddhistQuotesWorld) {
   await this.page!.setViewportSize({ width: 375, height: 667 });
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(TestTimeout.MEDIUM);
 });
 
 When('I view the filter controls', async function (this: BuddhistQuotesWorld) {
