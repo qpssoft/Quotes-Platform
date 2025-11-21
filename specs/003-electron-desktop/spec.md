@@ -66,8 +66,9 @@ This replaces the React Native Windows implementation (Phase 4 of 002-react-nati
 - When timer triggers a new quote
 - Then an overlay window appears at configured position (9 positions: corners, edges, center)
 - And the overlay auto-dismisses after configured duration (5-30 seconds)
-- And the overlay is semi-transparent and click-through (optional)
-- And I can click to view full quote in main window
+- And the overlay is semi-transparent (default 80% opacity)
+- And I can click the overlay to dismiss it immediately
+- And clicking opens full quote in main window before dismissing
 
 ### US-004: Auto-Launch on Startup
 **As a** desktop user  
@@ -107,8 +108,17 @@ This replaces the React Native Windows implementation (Phase 4 of 002-react-nati
 ### FR-002: Electron Desktop Features
 - Package Angular app with Electron
 - System tray integration with menu
-- Global keyboard shortcuts (configurable)
-- Quote notification overlay (9 positions, auto-dismiss)
+- Global keyboard shortcuts (configurable):
+  - Warn user on registration failure (conflict detection)
+  - Keep previous working shortcut if new one conflicts
+  - Display actionable error message with alternative suggestions
+- Quote notification overlay:
+  - 9 position options (corners, edges, center)
+  - Auto-dismiss after configurable duration (5-30s)
+  - Click to dismiss immediately
+  - Display quote text + author
+  - Default 80% opacity (configurable 50-100%)
+  - Click opens full quote in main window
 - Auto-launch on system startup
 - Always-on-top window mode
 - Native window frame or frameless design
@@ -179,7 +189,13 @@ electron-app/
 - Keyboard shortcuts configurable
 
 ### NFR-003: Reliability
-- Graceful error handling (crash recovery)
+- Graceful error handling:
+  - Fallback to default values on corrupted preferences
+  - Use built-in quotes if quotes.json missing/corrupted
+  - Display dismissible error notifications to user
+  - Continue app functionality with degraded state
+  - Log errors for debugging
+- Crash recovery (restore window state on restart)
 - Settings backup/restore
 - Automatic error reporting (opt-in)
 - Offline-first (all features work without internet)
@@ -252,6 +268,16 @@ electron-app/
 
 5. **Update Mechanism**: Auto-update or manual?
    - **Decision**: Auto-update with user prompt (electron-updater)
+
+## Clarifications
+
+### Session 2025-11-21
+
+- Q: When a quote notification overlay appears on screen, how should it respond to user interaction? → A: Dismissible with click (clicking the overlay closes it immediately), and auto-dismiss after configured interval time
+- Q: When the quote overlay appears, what information should be displayed? → A: Quote text + author (essential information, compact)
+- Q: When the app encounters errors (e.g., corrupted preferences, missing quote data, IPC communication failures), how should it handle them? → A: Graceful degradation (fallback to defaults, notify user with dismissible message)
+- Q: When a user-configured keyboard shortcut conflicts with another application or system shortcut, how should the app handle it? → A: Warn on registration failure (show message, keep previous working shortcut)
+- Q: What should be the default transparency level for the quote overlay window? → A: 80% opacity
 
 ## Approval
 
