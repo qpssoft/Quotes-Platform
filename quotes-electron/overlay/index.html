@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote Overlay</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Noto Serif', Georgia, serif;
+      overflow: hidden;
+      background: transparent;
+      cursor: pointer;
+      -webkit-app-region: drag;
+    }
+
+    .overlay-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.95) 0%, rgba(184, 134, 11, 0.95) 100%);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .overlay-container.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .overlay-container.hide {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+
+    .quote-text {
+      font-size: 20px;
+      line-height: 1.6;
+      color: #FFF8F0;
+      text-align: center;
+      margin-bottom: 16px;
+      font-style: italic;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      word-wrap: break-word;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .quote-text::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .quote-text::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .quote-text::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    .quote-text::before {
+      content: '"';
+      font-size: 36px;
+      color: rgba(255, 255, 255, 0.4);
+      font-family: Georgia, serif;
+      line-height: 0;
+      vertical-align: -0.3em;
+      margin-right: 8px;
+    }
+
+    .quote-text::after {
+      content: '"';
+      font-size: 36px;
+      color: rgba(255, 255, 255, 0.4);
+      font-family: Georgia, serif;
+      line-height: 0;
+      vertical-align: -0.3em;
+      margin-left: 8px;
+    }
+
+    .quote-author {
+      font-size: 16px;
+      color: #FFF8F0;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .quote-author::before {
+      content: '— ';
+    }
+
+    .quote-category {
+      font-size: 12px;
+      color: rgba(255, 248, 240, 0.8);
+      text-align: center;
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+    }
+
+    .close-hint {
+      position: absolute;
+      bottom: 12px;
+      right: 16px;
+      font-size: 11px;
+      color: rgba(255, 248, 240, 0.6);
+      font-family: system-ui, -apple-system, sans-serif;
+      font-style: normal;
+      letter-spacing: 0.5px;
+    }
+
+    /* Loading state */
+    .overlay-container.loading {
+      background: linear-gradient(135deg, rgba(139, 69, 19, 0.95) 0%, rgba(92, 61, 46, 0.95) 100%);
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 248, 240, 0.2);
+      border-top-color: #FFF8F0;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Pulse animation for emphasis */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .overlay-container.pulse {
+      animation: pulse 0.5s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay-container loading" id="overlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <script>
+    // Use window.electronAPI exposed by preload
+    const overlayElement = document.getElementById('overlay');
+    let currentQuote = null;
+
+    // Show overlay with animation
+    function showOverlay() {
+      overlayElement.classList.remove('hide');
+      overlayElement.classList.add('show');
+    }
+
+    // Hide overlay with animation
+    function hideOverlay() {
+      overlayElement.classList.remove('show');
+      overlayElement.classList.add('hide');
+      
+      // Notify main process when animation completes
+      setTimeout(() => {
+        if (window.electronAPI?.internal?.send) {
+          window.electronAPI.internal.send('overlay:fade-complete');
+        }
+      }, 300);
+    }
+
+    // Display quote content
+    function displayQuote(quote) {
+      currentQuote = quote;
+      
+      // Remove loading state
+      overlayElement.classList.remove('loading');
+      
+      // Build content HTML
+      let html = '';
+      
+      if (quote.text) {
+        html += `<div class="quote-text">${escapeHtml(quote.text)}</div>`;
+      }
+      
+      if (quote.author) {
+        html += `<div class="quote-author">${escapeHtml(quote.author)}</div>`;
+      }
+      
+      if (quote.category) {
+        html += `<div class="quote-category">${escapeHtml(quote.category)}</div>`;
+      }
+      
+      html += '<div class="close-hint">Click to dismiss</div>';
+      
+      // Update overlay content
+      overlayElement.innerHTML = html;
+      
+      // Show with animation
+      showOverlay();
+      
+      // Add pulse effect
+      overlayElement.classList.add('pulse');
+      setTimeout(() => {
+        overlayElement.classList.remove('pulse');
+      }, 500);
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Wait for DOM and API to be ready
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('Overlay renderer ready');
+      
+      // Listen for quote display from main process
+      if (window.electronAPI?.internal?.on) {
+        window.electronAPI.internal.on('overlay:display-quote', (quote) => {
+          console.log('Received quote to display:', quote);
+          displayQuote(quote);
+        });
+
+        // Listen for fade-out command
+        window.electronAPI.internal.on('overlay:fade-out', () => {
+          console.log('Received fade-out command');
+          hideOverlay();
+        });
+      } else {
+        console.error('electronAPI not available!');
+      }
+
+      // Handle click to dismiss
+      overlayElement.addEventListener('click', () => {
+        console.log('Overlay clicked');
+        if (window.electronAPI?.internal?.send) {
+          window.electronAPI.internal.send('overlay:clicked');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

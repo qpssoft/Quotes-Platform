@@ -18,8 +18,10 @@ export interface ElectronAPI {
   
   // Overlay controls
   overlay: {
-    show: (quote: { text: string; author: string }, position: number) => Promise<void>;
-    hide: () => Promise<void>;
+    show: (quote: { text: string; author: string; category?: string }, position?: string) => Promise<boolean>;
+    hide: () => Promise<boolean>;
+    updateConfig: (config: Record<string, unknown>) => Promise<boolean>;
+    getConfig: () => Promise<Record<string, unknown> | null>;
   };
   
   // Preferences
@@ -34,6 +36,34 @@ export interface ElectronAPI {
     getFailed: () => Promise<string[]>;
     register: (key: string, action: string, description: string) => Promise<boolean>;
     unregister: (action: string) => Promise<boolean>;
+  };
+  
+  // Auto-launch
+  autoLaunch: {
+    set: (enabled: boolean) => Promise<boolean>;
+    get: () => Promise<boolean>;
+  };
+  
+  // Always-on-top
+  alwaysOnTop: {
+    set: (enabled: boolean) => Promise<boolean>;
+    toggle: () => Promise<boolean>;
+    get: () => Promise<boolean>;
+  };
+  
+  // Internal IPC for overlay window
+  internal: {
+    send: (channel: string, ...args: unknown[]) => void;
+    on: (channel: string, callback: (...args: unknown[]) => void) => void;
+  };
+  
+  // Event listeners for Angular app
+  events: {
+    onRotationNext: (callback: () => void) => void;
+    onRotationToggle: (callback: () => void) => void;
+    onNavigateSettings: (callback: () => void) => void;
+    onAlwaysOnTopChanged: (callback: (enabled: boolean) => void) => void;
+    onOverlayRequestCurrentQuote: (callback: () => void) => void;
   };
 }
 
@@ -54,6 +84,8 @@ const electronAPI: ElectronAPI = {
   overlay: {
     show: (quote, position) => ipcRenderer.invoke('overlay:show', quote, position),
     hide: () => ipcRenderer.invoke('overlay:hide'),
+    updateConfig: (config) => ipcRenderer.invoke('overlay:update-config', config),
+    getConfig: () => ipcRenderer.invoke('overlay:get-config'),
   },
   
   prefs: {
@@ -66,6 +98,56 @@ const electronAPI: ElectronAPI = {
     getFailed: () => ipcRenderer.invoke('shortcuts:get-failed'),
     register: (key, action, description) => ipcRenderer.invoke('shortcuts:register', key, action, description),
     unregister: (action) => ipcRenderer.invoke('shortcuts:unregister', action),
+  },
+  
+  // Auto-launch
+  autoLaunch: {
+    set: (enabled) => ipcRenderer.invoke('auto-launch:set', enabled),
+    get: () => ipcRenderer.invoke('auto-launch:get'),
+  },
+  
+  // Always-on-top
+  alwaysOnTop: {
+    set: (enabled) => ipcRenderer.invoke('always-on-top:set', enabled),
+    toggle: () => ipcRenderer.invoke('always-on-top:toggle'),
+    get: () => ipcRenderer.invoke('always-on-top:get'),
+  },
+  
+  // Internal IPC for overlay and other windows
+  internal: {
+    send: (channel, ...args) => {
+      // Whitelist allowed channels
+      const allowedChannels = ['overlay:clicked', 'overlay:fade-complete'];
+      if (allowedChannels.includes(channel)) {
+        ipcRenderer.send(channel, ...args);
+      }
+    },
+    on: (channel, callback) => {
+      // Whitelist allowed channels
+      const allowedChannels = ['overlay:display-quote', 'overlay:fade-out'];
+      if (allowedChannels.includes(channel)) {
+        ipcRenderer.on(channel, (_event, ...args) => callback(...args));
+      }
+    },
+  },
+  
+  // Event listeners for Angular app
+  events: {
+    onRotationNext: (callback) => {
+      ipcRenderer.on('rotation:next', () => callback());
+    },
+    onRotationToggle: (callback) => {
+      ipcRenderer.on('rotation:toggle', () => callback());
+    },
+    onNavigateSettings: (callback) => {
+      ipcRenderer.on('navigate:settings', () => callback());
+    },
+    onAlwaysOnTopChanged: (callback) => {
+      ipcRenderer.on('window:always-on-top-changed', (_event, enabled) => callback(enabled));
+    },
+    onOverlayRequestCurrentQuote: (callback) => {
+      ipcRenderer.on('overlay:request-current-quote', () => callback());
+    },
   },
 };
 

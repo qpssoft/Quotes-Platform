@@ -1,4 +1,5 @@
 import { globalShortcut, BrowserWindow, dialog } from 'electron';
+import type { OverlayManager } from './overlay';
 
 /**
  * ShortcutManager - Manages global keyboard shortcuts for the application
@@ -21,9 +22,18 @@ export class ShortcutManager {
   private shortcuts: Map<string, ShortcutConfig> = new Map();
   private mainWindow: BrowserWindow;
   private failedShortcuts: string[] = [];
+  private overlayManager: OverlayManager | null = null;
 
-  constructor(mainWindow: BrowserWindow) {
+  constructor(mainWindow: BrowserWindow, overlayManager?: OverlayManager) {
     this.mainWindow = mainWindow;
+    this.overlayManager = overlayManager || null;
+  }
+
+  /**
+   * Set overlay manager (can be set after construction)
+   */
+  setOverlayManager(overlayManager: OverlayManager): void {
+    this.overlayManager = overlayManager;
   }
 
   /**
@@ -186,7 +196,9 @@ export class ShortcutManager {
 
   private showOverlay(): void {
     console.log('Action: Show overlay');
-    this.mainWindow.webContents.send('overlay:show');
+    
+    // Request current quote from renderer, then show overlay
+    this.mainWindow.webContents.send('overlay:request-current-quote');
   }
 
   private nextQuote(): void {
