@@ -1,7 +1,10 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
+import { TrayManager } from './tray';
 
 let mainWindow: BrowserWindow | null = null;
+let trayManager: TrayManager | null = null;
+let isQuitting = false;
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
@@ -28,7 +31,20 @@ function createWindow(): void {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+    trayManager = null;
   });
+
+  // Handle close button - minimize to tray instead of closing
+  mainWindow.on('close', (event) => {
+    if (!isQuitting) {
+      event.preventDefault();
+      mainWindow?.hide();
+    }
+  });
+
+  // Create system tray
+  trayManager = new TrayManager(mainWindow);
+  trayManager.create();
 }
 
 // App lifecycle
@@ -48,4 +64,14 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+// Before quit, set flag to allow window close
+app.on('before-quit', () => {
+  isQuitting = true;
+});
+
+// Setup IPC handlers for tray menu actions
+ipcMain.on('rotation:status', (_event, status: 'playing' | 'paused') => {
+  trayManager?.updateStatus(status);
 });
