@@ -27,6 +27,10 @@ export class RotationControlsComponent implements OnInit, OnDestroy {
     return this.timer().isPlaying;
   }
 
+  get isAudioEnabled(): boolean {
+    return this.rotationService.isAudioEnabled();
+  }
+
   ngOnInit(): void {
     // Listen for Electron events (shortcuts/menu)
     if (this.electronService.isElectron()) {
@@ -64,9 +68,6 @@ export class RotationControlsComponent implements OnInit, OnDestroy {
    * Toggle play/pause state
    */
   togglePlayPause(): void {
-    // Enable audio on user interaction (required for autoplay policy)
-    this.audioService.enableAudio();
-    
     if (this.isPlaying) {
       this.rotationService.pause();
     } else {
@@ -78,9 +79,14 @@ export class RotationControlsComponent implements OnInit, OnDestroy {
    * Skip to next quote
    */
   nextQuote(): void {
-    // Enable audio on user interaction
-    this.audioService.enableAudio();
     this.rotationService.next();
+  }
+
+  /**
+   * Toggle audio notifications
+   */
+  toggleAudio(): void {
+    this.rotationService.toggleAudio();
   }
 
   /**

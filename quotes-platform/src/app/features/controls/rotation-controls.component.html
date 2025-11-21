@@ -30,6 +30,27 @@
         </svg>
         <span class="button-text">Kế tiếp</span>
       </button>
+
+      <button 
+        class="control-button audio-toggle"
+        data-testid="audio-toggle-button"
+        (click)="toggleAudio()"
+        [attr.aria-label]="isAudioEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'"
+        [attr.aria-pressed]="isAudioEnabled"
+        [class.enabled]="isAudioEnabled">
+        <svg class="button-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          @if (isAudioEnabled) {
+            <!-- Speaker with sound waves -->
+            <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
+            <path d="M14 8.5c1.5 1 2 2.5 2 3.5s-.5 2.5-2 3.5M16 6c2 1.5 3 3.5 3 6s-1 4.5-3 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          } @else {
+            <!-- Speaker muted -->
+            <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
+            <path d="M16 9l6 6M22 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          }
+        </svg>
+        <span class="button-text">{{ isAudioEnabled ? 'Âm thanh' : 'Tắt tiếng' }}</span>
+      </button>
     </div>
 
     <!-- Timer selector -->

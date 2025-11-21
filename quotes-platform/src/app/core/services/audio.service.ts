@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 })
 export class AudioService {
   private audio: HTMLAudioElement | null = null;
-  private isAudioEnabled = true;
+  private isAudioEnabled = false; // Disabled by default
   private audioContext: AudioContext | null = null;
 
   constructor() {
@@ -119,6 +119,14 @@ export class AudioService {
    */
   disableAudio(): void {
     this.isAudioEnabled = false;
+  }
+
+  /**
+   * Toggle audio notifications
+   */
+  toggleAudio(): boolean {
+    this.isAudioEnabled = !this.isAudioEnabled;
+    return this.isAudioEnabled;
   }
 
   /**

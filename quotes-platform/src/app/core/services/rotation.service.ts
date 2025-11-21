@@ -35,6 +35,13 @@ export class RotationService implements OnDestroy {
     const preferences = this.storageService.loadPreferences();
     if (preferences) {
       this.timer.update((t) => ({ ...t, interval: preferences.timerInterval }));
+      
+      // Load audio preference (default to false if not set)
+      if (preferences.audioEnabled === true) {
+        this.audioService.enableAudio();
+      } else {
+        this.audioService.disableAudio();
+      }
     }
   }
 
@@ -98,6 +105,7 @@ export class RotationService implements OnDestroy {
     // Save preference
     this.storageService.savePreferences({
       timerInterval: newInterval,
+      audioEnabled: this.audioService.isEnabled(),
       storageKey: 'buddhist-quotes-preferences',
     });
 
@@ -106,6 +114,29 @@ export class RotationService implements OnDestroy {
       this.pause();
       this.start();
     }
+  }
+
+  /**
+   * Toggle audio notifications
+   */
+  toggleAudio(): boolean {
+    const enabled = this.audioService.toggleAudio();
+    
+    // Save preference
+    this.storageService.savePreferences({
+      timerInterval: this.timer().interval,
+      audioEnabled: enabled,
+      storageKey: 'buddhist-quotes-preferences',
+    });
+    
+    return enabled;
+  }
+
+  /**
+   * Check if audio is enabled
+   */
+  isAudioEnabled(): boolean {
+    return this.audioService.isEnabled();
   }
 
   /**

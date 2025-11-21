@@ -5,6 +5,9 @@ export interface UserPreferences {
   /** Timer interval in seconds */
   timerInterval: number;
   
+  /** Enable audio notifications */
+  audioEnabled?: boolean;
+  
   /** Number of quotes to display in grid */
   displayCount?: number;
   

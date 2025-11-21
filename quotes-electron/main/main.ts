@@ -29,7 +29,9 @@ function createWindow(): void {
     minWidth: 800,
     minHeight: 600,
     title: 'Buddhist Quotes',
+    icon: path.join(__dirname, '../../assets/icon.ico'),
     show: false, // Don't show until state is applied
+    autoHideMenuBar: true, // Hide menu bar (can be toggled with Alt key)
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -56,10 +58,7 @@ function createWindow(): void {
     .then(() => console.log('✓ Renderer loaded successfully'))
     .catch((err: Error) => console.error('✗ Failed to load renderer:', err));
 
-  // Open DevTools in development
-  if (!app.isPackaged) {
-    mainWindow.webContents.openDevTools();
-  }
+  // DevTools disabled - use Ctrl+Shift+I to open manually if needed
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -100,10 +99,14 @@ function createWindow(): void {
   alwaysOnTopManager = new AlwaysOnTopManager(mainWindow);
   console.log('✓ Always-on-top manager initialized');
 
-  // Create application menu
-  menuManager = new MenuManager(mainWindow);
-  menuManager.create();
-  console.log('✓ Application menu created');
+  // Disable application menu (commented out for cleaner UI)
+  // menuManager = new MenuManager(mainWindow);
+  // menuManager.create();
+  // console.log('✓ Application menu created');
+  
+  // Remove menu bar completely
+  mainWindow.setMenu(null);
+  console.log('✓ Menu bar disabled');
 }
 
 // App lifecycle
