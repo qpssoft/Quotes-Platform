@@ -30,8 +30,10 @@ export interface ElectronAPI {
   
   // Shortcuts
   shortcuts: {
-    register: (shortcut: string, action: string) => Promise<boolean>;
-    unregister: (action: string) => Promise<void>;
+    getRegistered: () => Promise<Array<{ key: string; action: string; description: string }>>;
+    getFailed: () => Promise<string[]>;
+    register: (key: string, action: string, description: string) => Promise<boolean>;
+    unregister: (action: string) => Promise<boolean>;
   };
 }
 
@@ -60,8 +62,10 @@ const electronAPI: ElectronAPI = {
   },
   
   shortcuts: {
-    register: (shortcut, action) => ipcRenderer.invoke('shortcut:register', shortcut, action),
-    unregister: (action) => ipcRenderer.invoke('shortcut:unregister', action),
+    getRegistered: () => ipcRenderer.invoke('shortcuts:get-registered'),
+    getFailed: () => ipcRenderer.invoke('shortcuts:get-failed'),
+    register: (key, action, description) => ipcRenderer.invoke('shortcuts:register', key, action, description),
+    unregister: (action) => ipcRenderer.invoke('shortcuts:unregister', action),
   },
 };
 

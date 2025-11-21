@@ -1,9 +1,11 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import { TrayManager } from './tray';
+import { ShortcutManager } from './shortcuts';
 
 let mainWindow: BrowserWindow | null = null;
 let trayManager: TrayManager | null = null;
+let shortcutManager: ShortcutManager | null = null;
 let isQuitting = false;
 
 function createWindow(): void {
@@ -55,6 +57,12 @@ function createWindow(): void {
   trayManager = new TrayManager(mainWindow);
   trayManager.create();
   console.log('✓ System tray created');
+
+  // Setup global keyboard shortcuts
+  console.log('Setting up keyboard shortcuts...');
+  shortcutManager = new ShortcutManager(mainWindow);
+  shortcutManager.registerDefaults();
+  console.log('✓ Keyboard shortcuts registered');
 }
 
 // App lifecycle
@@ -79,9 +87,34 @@ app.on('window-all-closed', () => {
 // Before quit, set flag to allow window close
 app.on('before-quit', () => {
   isQuitting = true;
+  // Clean up shortcuts
+  if (shortcutManager) {
+    shortcutManager.unregisterAll();
+  }
 });
 
 // Setup IPC handlers for tray menu actions
 ipcMain.on('rotation:status', (_event, status: 'playing' | 'paused') => {
   trayManager?.updateStatus(status);
+});
+
+// IPC handlers for shortcut management
+ipcMain.handle('shortcuts:get-registered', () => {
+  return shortcutManager?.getRegistered() || [];
+});
+
+ipcMain.handle('shortcuts:get-failed', () => {
+  return shortcutManager?.getFailed() || [];
+});
+
+ipcMain.handle('shortcuts:register', (_event, key: string, action: string, description: string) => {
+  if (!shortcutManager) return false;
+  // For custom shortcuts, we'd need to map actions to callbacks
+  // This is a placeholder for future settings UI
+  console.log(`Custom shortcut registration requested: ${key} → ${action}`);
+  return false; // Not implemented yet
+});
+
+ipcMain.handle('shortcuts:unregister', (_event, action: string) => {
+  return shortcutManager?.unregister(action) || false;
 });
