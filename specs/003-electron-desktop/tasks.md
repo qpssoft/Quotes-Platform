@@ -15,7 +15,7 @@ This document provides a detailed task breakdown for implementing the Electron d
 | Phase 4: Overlay | 5 tasks | 3-4 days | ✅ Complete |
 | Phase 5: Desktop Features | 4 tasks | 2-3 days | ✅ Complete |
 | Phase 6: Settings | 4 tasks | 2-3 days | ✅ Core Complete (UI deferred) |
-| Phase 7: Packaging | 5 tasks | 3-4 days | ⏳ In Progress (2/5 config complete, builds pending) |
+| Phase 7: Packaging | 5 tasks | 3-4 days | ⏳ In Progress (3/5 config complete, builds pending) |
 | Phase 8: Testing | 5 tasks | 2-3 days | ⏸️ Pending |
 | **TOTAL** | **42 tasks** | **20-30 days** | **76% Complete** |
 
@@ -1031,28 +1031,45 @@ This document provides a detailed task breakdown for implementing the Electron d
 - **Status**: ⏳ Configuration Complete - Build Requires macOS System
 - **Note**: Building macOS packages requires a macOS machine or CI/CD with macOS runners
 
-### T704: Linux Packaging
+### T704: Linux Packaging ⏳
 - **Description**: Build and test Linux packages
 - **Effort**: 2 hours
 - **Dependencies**: T701
 - **Steps**:
-  1. Build AppImage: `npm run build:linux`
-  2. Test on Ubuntu 20.04+:
-     - Make AppImage executable
-     - Run AppImage
+  1. ✅ Add .deb target to electron-builder.yml (AppImage + deb)
+  2. ✅ Configure Linux desktop entry with proper metadata
+  3. ✅ Set executable name: buddhist-quotes
+  4. ✅ Create LINUX_PACKAGING_GUIDE.md (comprehensive guide)
+  5. ✅ Create build-linux.sh script (automated build)
+  6. ✅ Create LINUX_BUILD_QUICKREF.md (quick reference)
+  7. ✅ Create scripts/README.md documentation
+  8. ⏸️ Build on Linux system (requires Linux, WSL2, Docker, or CI/CD):
+     - Run `./scripts/build-linux.sh` on Ubuntu 20.04+
+     - Or use WSL2: `wsl --install -d Ubuntu-22.04`
+     - Or use GitHub Actions with ubuntu-22.04 runner
+  9. ⏸️ Test AppImage on Ubuntu 20.04+:
+     - Make executable: `chmod +x Buddhist\ Quotes-2.0.0.AppImage`
+     - Run: `./Buddhist\ Quotes-2.0.0.AppImage`
+     - Test all features (quotes, search, favorites, tray, shortcuts, overlay)
+  10. ⏸️ Test .deb package on Ubuntu/Debian:
+     - Install: `sudo dpkg -i buddhist-quotes_2.0.0_amd64.deb`
+     - Launch from menu or: `buddhist-quotes`
      - Test all features
-  3. Build .deb package (optional):
-     - Add deb target to electron-builder
-     - Build deb
-     - Install with `dpkg -i`
-     - Test installation
-  4. Test on other distros (Fedora, Arch) if possible
-  5. Test auto-update mechanism (if AppImage supports)
+     - Verify desktop integration
+     - Uninstall: `sudo apt-get remove buddhist-quotes`
+  11. ⏸️ Test on other distros (Fedora, Arch, Linux Mint)
+  12. ⏸️ Test auto-update mechanism (if AppImage supports)
 - **Files**:
-  - `dist/Buddhist Quotes.AppImage`
-  - `dist/buddhist-quotes.deb` (optional)
-- **Verification**: AppImage runs on Ubuntu 20.04+
-- **Status**: ⏸️ Pending
+  - `electron-builder.yml` (✅ updated with .deb target)
+  - `LINUX_PACKAGING_GUIDE.md` (✅ created - 600+ lines)
+  - `LINUX_BUILD_QUICKREF.md` (✅ created - quick commands)
+  - `scripts/build-linux.sh` (✅ created - automated build)
+  - `scripts/README.md` (✅ created - scripts documentation)
+  - `release/Buddhist Quotes-2.0.0.AppImage` (⏸️ pending - requires Linux)
+  - `release/buddhist-quotes_2.0.0_amd64.deb` (⏸️ pending - requires Linux)
+- **Verification**: AppImage and .deb run on Ubuntu 20.04+, Debian 11+, Linux Mint 21+
+- **Status**: ⏳ Configuration Complete - Build Requires Linux System
+- **Note**: Building Linux packages requires Linux tools (mksquashfs, dpkg). Use WSL2, Docker, Linux VM, or GitHub Actions with ubuntu-latest runner. All configuration files and build scripts are ready.
 
 ### T705: Auto-Update Setup
 - **Description**: Configure electron-updater for automatic updates
@@ -1095,11 +1112,11 @@ This document provides a detailed task breakdown for implementing the Electron d
 - **Status**: ⏸️ Pending
 
 **Phase 7 Deliverables**:
-- Windows installer (.exe) and portable
-- macOS installer (.dmg)
-- Linux package (.AppImage)
-- Auto-update mechanism functional
-- All packages tested on target platforms
+- ✅ Windows installer (.exe) and portable - Build Complete (Testing pending)
+- ⏳ macOS installer (.dmg) - Configuration Complete (Build requires macOS)
+- ⏳ Linux packages (.AppImage + .deb) - Configuration Complete (Build requires Linux)
+- ⏸️ Auto-update mechanism functional (T705 pending)
+- ⏸️ All packages tested on target platforms (Phase 8)
 
 ---
 
