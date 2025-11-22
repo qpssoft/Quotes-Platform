@@ -51,6 +51,15 @@ export interface ElectronAPI {
     get: () => Promise<boolean>;
   };
   
+  // Auto-updater
+  updater: {
+    checkForUpdates: () => Promise<{ available: boolean; reason?: string }>;
+    checkForUpdatesSilent: () => Promise<{ available: boolean; reason?: string }>;
+    getVersion: () => Promise<string>;
+    onStatus: (callback: (message: string) => void) => void;
+    onProgress: (callback: (progress: { percent: number; bytesPerSecond: number; transferred: number; total: number }) => void) => void;
+  };
+  
   // Internal IPC for overlay window
   internal: {
     send: (channel: string, ...args: unknown[]) => void;
@@ -111,6 +120,19 @@ const electronAPI: ElectronAPI = {
     set: (enabled) => ipcRenderer.invoke('always-on-top:set', enabled),
     toggle: () => ipcRenderer.invoke('always-on-top:toggle'),
     get: () => ipcRenderer.invoke('always-on-top:get'),
+  },
+  
+  // Auto-updater
+  updater: {
+    checkForUpdates: () => ipcRenderer.invoke('updater:check-for-updates'),
+    checkForUpdatesSilent: () => ipcRenderer.invoke('updater:check-for-updates-silent'),
+    getVersion: () => ipcRenderer.invoke('updater:get-version'),
+    onStatus: (callback) => {
+      ipcRenderer.on('update:status', (_event, message) => callback(message));
+    },
+    onProgress: (callback) => {
+      ipcRenderer.on('update:progress', (_event, progress) => callback(progress));
+    },
   },
   
   // Internal IPC for overlay and other windows

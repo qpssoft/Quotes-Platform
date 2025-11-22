@@ -8,6 +8,7 @@ import { AlwaysOnTopManager } from './always-on-top';
 import { MenuManager } from './menu';
 import { WindowStateManager } from './window-state';
 import { getPreferencesStore } from './store';
+import { UpdaterManager } from './updater';
 
 let mainWindow: BrowserWindow | null = null;
 let trayManager: TrayManager | null = null;
@@ -16,6 +17,7 @@ let overlayManager: OverlayManager | null = null;
 let alwaysOnTopManager: AlwaysOnTopManager | null = null;
 let menuManager: MenuManager | null = null;
 let windowStateManager: WindowStateManager | null = null;
+let updaterManager: UpdaterManager | null = null;
 let isQuitting = false;
 
 function createWindow(): void {
@@ -108,6 +110,26 @@ function createWindow(): void {
   // Remove menu bar completely
   mainWindow.setMenu(null);
   console.log('✓ Menu bar disabled');
+
+  // Setup auto-updater (only in production)
+  if (!app.isPackaged) {
+    console.log('⚠ Auto-updater disabled (development mode)');
+  } else {
+    console.log('Setting up auto-updater...');
+    updaterManager = new UpdaterManager(mainWindow);
+    
+    // Check if automatic updates are enabled in preferences
+    const store = getPreferencesStore();
+    const prefs = store.getAll();
+    
+    if (prefs.updates?.checkAutomatically !== false) {
+      // Setup automatic checking (every 12 hours)
+      updaterManager.setupAutoCheck(12);
+      console.log('✓ Auto-updater configured (checks every 12 hours)');
+    } else {
+      console.log('✓ Auto-updater ready (manual checks only)');
+    }
+  }
 }
 
 // App lifecycle
@@ -139,6 +161,10 @@ app.on('before-quit', () => {
   // Clean up overlay
   if (overlayManager) {
     overlayManager.destroy();
+  }
+  // Clean up updater
+  if (updaterManager) {
+    updaterManager.destroy();
   }
 });
 
@@ -264,4 +290,26 @@ ipcMain.handle('window:get-state', () => {
 ipcMain.handle('window:save-state', () => {
   windowStateManager?.saveState();
   return true;
+});
+
+// IPC handlers for auto-updater
+ipcMain.handle('updater:check-for-updates', () => {
+  if (!updaterManager) {
+    console.warn('Updater not available (development mode or not initialized)');
+    return { available: false, reason: 'Updater not available in development mode' };
+  }
+  updaterManager.checkForUpdatesAndNotify();
+  return { available: true };
+});
+
+ipcMain.handle('updater:check-for-updates-silent', () => {
+  if (!updaterManager) {
+    return { available: false, reason: 'Updater not available in development mode' };
+  }
+  updaterManager.checkForUpdates();
+  return { available: true };
+});
+
+ipcMain.handle('updater:get-version', () => {
+  return app.getVersion();
 });

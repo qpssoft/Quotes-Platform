@@ -63,5 +63,7 @@ linux:
   executableName: buddhist-quotes
 
 publish:
-  provider: generic
-  url: https://releases.buddhistquotes.com
+  provider: github
+  owner: YOUR_GITHUB_USERNAME
+  repo: buddhist-quotes
+  releaseType: release
