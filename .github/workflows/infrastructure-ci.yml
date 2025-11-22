@@ -1,0 +1,129 @@
+name: Infrastructure CI/CD
+
+on:
+  push:
+    branches: [004-azure-backend, main]
+    paths:
+      - 'infrastructure/**'
+      - '.github/workflows/infrastructure-ci.yml'
+  pull_request:
+    branches: [004-azure-backend, main]
+    paths:
+      - 'infrastructure/**'
+
+env:
+  AZURE_REGION: 'eastus'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Install Bicep CLI
+        run: az bicep install
+
+      - name: Lint Bicep files
+        run: |
+          az bicep build --file infrastructure/main.bicep
+          echo "Bicep lint passed"
+
+      - name: Validate ARM template
+        run: |
+          az deployment sub validate \
+            --location ${{ env.AZURE_REGION }} \
+            --template-file infrastructure/main.bicep \
+            --parameters infrastructure/parameters/dev.parameters.json
+
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.ref == 'refs/heads/004-azure-backend' && github.event_name == 'push'
+    environment:
+      name: 'dev'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Infrastructure
+        run: |
+          az deployment sub create \
+            --location ${{ env.AZURE_REGION }} \
+            --template-file infrastructure/main.bicep \
+            --parameters infrastructure/parameters/dev.parameters.json \
+            --name "quotes-backend-dev-$(date +%Y%m%d%H%M%S)"
+
+      - name: Run smoke tests
+        run: |
+          echo "Verifying dev environment deployment..."
+          az resource list --resource-group quotes-backend-rg-dev --output table
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: 'staging'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Infrastructure
+        run: |
+          az deployment sub create \
+            --location ${{ env.AZURE_REGION }} \
+            --template-file infrastructure/main.bicep \
+            --parameters infrastructure/parameters/staging.parameters.json \
+            --name "quotes-backend-staging-$(date +%Y%m%d%H%M%S)"
+
+      - name: Run smoke tests
+        run: |
+          echo "Verifying staging environment deployment..."
+          az resource list --resource-group quotes-backend-rg-staging --output table
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: 'production'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Infrastructure
+        run: |
+          az deployment sub create \
+            --location ${{ env.AZURE_REGION }} \
+            --template-file infrastructure/main.bicep \
+            --parameters infrastructure/parameters/production.parameters.json \
+            --name "quotes-backend-production-$(date +%Y%m%d%H%M%S)"
+
+      - name: Run smoke tests
+        run: |
+          echo "Verifying production environment deployment..."
+          az resource list --resource-group quotes-backend-rg-production --output table

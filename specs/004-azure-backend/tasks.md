@@ -35,18 +35,18 @@
 - [ ] T006 Configure Azure AD B2C social identity providers (Google, Facebook, Microsoft)
 - [ ] T007 Create Azure Key Vault (quotes-backend-kv) and grant admin access
 - [ ] T008 [P] Store OAuth secrets in Key Vault (GoogleClientSecret, FacebookAppSecret, MicrosoftClientSecret)
-- [ ] T009 Initialize C# solution: `dotnet new sln -n Quotes.Backend` in quotes-backend/
-- [ ] T010 [P] Create Quotes.Core project: `dotnet new classlib -n Quotes.Core` in quotes-backend/src/
-- [ ] T011 [P] Create Quotes.Application project: `dotnet new classlib -n Quotes.Application` in quotes-backend/src/
-- [ ] T012 [P] Create Quotes.Infrastructure project: `dotnet new classlib -n Quotes.Infrastructure` in quotes-backend/src/
-- [ ] T013 [P] Create Quotes.Functions project: `dotnet new func -n Quotes.Functions` in quotes-backend/src/
-- [ ] T014 Configure project references: Functions → Infrastructure → Application → Core
-- [ ] T015 Add NuGet packages: Azure.Storage.Blobs, Microsoft.Identity.Web, Azure.Security.KeyVault.Secrets, Azure.ApplicationInsights
-- [ ] T016 Initialize React Admin Center: `npx create-react-app quotes-admin --template typescript`
-- [ ] T017 [P] Install Admin Center dependencies: Material-UI, React Router, Axios
-- [ ] T018 [P] Create infrastructure/ directory and initialize Bicep module structure
-- [ ] T019 [P] Setup GitHub Actions workflows: backend-ci.yml, admin-ci.yml, infrastructure-ci.yml in .github/workflows/
-- [ ] T020 Install development tools: .NET 8 SDK, Azure Functions Core Tools, Azure CLI, Bicep CLI, Node.js 20+
+- [X] T009 Initialize C# solution: `dotnet new sln -n Quotes.Backend` in quotes-backend/
+- [X] T010 [P] Create Quotes.Core project: `dotnet new classlib -n Quotes.Core` in quotes-backend/src/
+- [X] T011 [P] Create Quotes.Application project: `dotnet new classlib -n Quotes.Application` in quotes-backend/src/
+- [X] T012 [P] Create Quotes.Infrastructure project: `dotnet new classlib -n Quotes.Infrastructure` in quotes-backend/src/
+- [X] T013 [P] Create Quotes.Functions project: `dotnet new func -n Quotes.Functions` in quotes-backend/src/
+- [X] T014 Configure project references: Functions → Infrastructure → Application → Core
+- [X] T015 Add NuGet packages: Azure.Storage.Blobs, Microsoft.Identity.Web, Azure.Security.KeyVault.Secrets, Azure.ApplicationInsights
+- [X] T016 Initialize React Admin Center: `npx create-react-app quotes-admin --template typescript`
+- [X] T017 [P] Install Admin Center dependencies: Material-UI, React Router, Axios, Playwright
+- [X] T018 [P] Create infrastructure/ directory and initialize Bicep module structure
+- [X] T019 [P] Setup GitHub Actions workflows: backend-ci.yml, admin-ci.yml, infrastructure-ci.yml in .github/workflows/
+- [X] T020 Install development tools: .NET 8 SDK, Azure Functions Core Tools, Azure CLI, Bicep CLI, Node.js 20+
 
 ---
 
