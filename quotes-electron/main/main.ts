@@ -7,6 +7,7 @@ import { AutoLaunchManager } from './auto-launch';
 import { AlwaysOnTopManager } from './always-on-top';
 import { MenuManager } from './menu';
 import { WindowStateManager } from './window-state';
+import { getPreferencesStore } from './store';
 
 let mainWindow: BrowserWindow | null = null;
 let trayManager: TrayManager | null = null;
@@ -192,6 +193,43 @@ ipcMain.handle('overlay:update-config', (_event, config: any) => {
 
 ipcMain.handle('overlay:get-config', () => {
   return overlayManager?.getConfig() || null;
+});
+
+// IPC handlers for preferences
+ipcMain.handle('prefs:save', (_event, prefs: any) => {
+  const store = getPreferencesStore();
+  
+  // Validate preferences before saving
+  const validation = store.validate(prefs);
+  if (!validation.valid) {
+    console.error('Invalid preferences:', validation.errors);
+    throw new Error(`Invalid preferences: ${validation.errors.join(', ')}`);
+  }
+  
+  const success = store.set(prefs);
+  if (success) {
+    console.log('✔️ Preferences saved successfully');
+    
+    // Apply preferences that need immediate action
+    if (prefs.autoLaunch !== undefined) {
+      AutoLaunchManager.setAutoLaunch(prefs.autoLaunch.enabled, prefs.autoLaunch.startMinimized);
+    }
+    if (prefs.window?.alwaysOnTop !== undefined && mainWindow) {
+      mainWindow.setAlwaysOnTop(prefs.window.alwaysOnTop);
+    }
+    if (prefs.overlay !== undefined && overlayManager) {
+      overlayManager.updateConfig(prefs.overlay);
+    }
+  }
+  
+  return success;
+});
+
+ipcMain.handle('prefs:load', () => {
+  const store = getPreferencesStore();
+  const prefs = store.getAll();
+  console.log('✔️ Preferences loaded');
+  return prefs;
 });
 
 // IPC handlers for auto-launch
